@@ -2,6 +2,10 @@ import sys
 import numpy as np
 import random
 import turtle
+import pandas as pd
+
+n1 = int(sys.argv[1])
+n2 = int(sys.argv[2])
 
 def Escribe(n1=0, n2=0, pref=''):
   global DD
@@ -20,17 +24,19 @@ def Escribe(n1=0, n2=0, pref=''):
     else:
       k = k+1
 
-dd = dir(turtle)
+dd = dir(pd)
 
 nl = len(dd)
-print(nl)
+print('longitud: ', nl)
+
 
 global DD
+DD = dd
 
-n1 = int(sys.argv[1])
-n2 = int(sys.argv[2])
+if n2 > nl:
+  n2 = nl
 
-Escribe(n1, n2, 'turtle')
+Escribe(n1, n2, 'pd')
 
 
 
