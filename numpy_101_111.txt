@@ -1,0 +1,292 @@
+172
+onclick
+==========101===============onclick=====================
+Help on function onclick in module turtle:
+
+onclick(fun, btn=1, add=None)
+    Bind fun to mouse-click event on this turtle on canvas.
+
+    Arguments:
+    fun --  a function with two arguments, to which will be assigned
+            the coordinates of the clicked point on the canvas.
+    btn --  number of the mouse-button defaults to 1 (left mouse button).
+    add --  True or False. If True, new binding will be added, otherwise
+            it will replace a former binding.
+
+    Example for the anonymous turtle, i. e. the procedural way:
+
+    >>> def turn(x, y):
+    ...     left(360)
+    ...
+    >>> onclick(turn)  # Now clicking into the turtle will turn it.
+    >>> onclick(None)  # event-binding will be removed
+
+ondrag
+==========102===============ondrag=====================
+Help on function ondrag in module turtle:
+
+ondrag(fun, btn=1, add=None)
+    Bind fun to mouse-move event on this turtle on canvas.
+
+    Arguments:
+    fun -- a function with two arguments, to which will be assigned
+           the coordinates of the clicked point on the canvas.
+    btn -- number of the mouse-button defaults to 1 (left mouse button).
+
+    Every sequence of mouse-move-events on a turtle is preceded by a
+    mouse-click event on that
+
+    Example:
+    >>> ondrag(goto)
+
+    Subsequently clicking and dragging a Turtle will move it
+    across the screen thereby producing handdrawings (if pen is
+    down).
+
+onkey
+==========103===============onkey=====================
+Help on function onkey in module turtle:
+
+onkey(fun, key)
+    Bind fun to key-release event of key.
+
+    Arguments:
+    fun -- a function with no arguments
+    key -- a string: key (e.g. "a") or key-symbol (e.g. "space")
+
+    In order to be able to register key-events, TurtleScreen
+    must have focus. (See method listen.)
+
+    Example:
+
+    >>> def f():
+    ...     fd(50)
+    ...     lt(60)
+    ...
+    >>> onkey(f, "Up")
+    >>> listen()
+
+    Subsequently the turtle can be moved by repeatedly pressing
+    the up-arrow key, consequently drawing a hexagon
+
+onkeypress
+==========104===============onkeypress=====================
+Help on function onkeypress in module turtle:
+
+onkeypress(fun, key=None)
+    Bind fun to key-press event of key if key is given,
+    or to any key-press-event if no key is given.
+
+    Arguments:
+    fun -- a function with no arguments
+    key -- a string: key (e.g. "a") or key-symbol (e.g. "space")
+
+    In order to be able to register key-events, TurtleScreen
+    must have focus. (See method listen.)
+
+    Example (for a TurtleScreen instance named screen
+    and a Turtle instance named turtle):
+
+    >>> def f():
+    ...     fd(50)
+    ...     lt(60)
+    ...
+    >>> onkeypress(f, "Up")
+    >>> listen()
+
+    Subsequently the turtle can be moved by repeatedly pressing
+    the up-arrow key, or by keeping pressed the up-arrow key.
+    consequently drawing a hexagon.
+
+onkeyrelease
+==========105===============onkeyrelease=====================
+Help on function onkeyrelease in module turtle:
+
+onkeyrelease(fun, key)
+    Bind fun to key-release event of key.
+
+    Arguments:
+    fun -- a function with no arguments
+    key -- a string: key (e.g. "a") or key-symbol (e.g. "space")
+
+    In order to be able to register key-events, TurtleScreen
+    must have focus. (See method listen.)
+
+    Example:
+
+    >>> def f():
+    ...     fd(50)
+    ...     lt(60)
+    ...
+    >>> onkey(f, "Up")
+    >>> listen()
+
+    Subsequently the turtle can be moved by repeatedly pressing
+    the up-arrow key, consequently drawing a hexagon
+
+onrelease
+==========106===============onrelease=====================
+Help on function onrelease in module turtle:
+
+onrelease(fun, btn=1, add=None)
+    Bind fun to mouse-button-release event on this turtle on canvas.
+
+    Arguments:
+    fun -- a function with two arguments, to which will be assigned
+            the coordinates of the clicked point on the canvas.
+    btn --  number of the mouse-button defaults to 1 (left mouse button).
+
+    Example (for a MyTurtle instance named joe):
+    >>> class MyTurtle(Turtle):
+    ...     def glow(self,x,y):
+    ...             self.fillcolor("red")
+    ...     def unglow(self,x,y):
+    ...             self.fillcolor("")
+    ...
+    >>> joe = MyTurtle()
+    >>> joe.onclick(joe.glow)
+    >>> joe.onrelease(joe.unglow)
+
+    Clicking on joe turns fillcolor red, unclicking turns it to
+    transparent.
+
+onscreenclick
+==========107===============onscreenclick=====================
+Help on function onscreenclick in module turtle:
+
+onscreenclick(fun, btn=1, add=None)
+    Bind fun to mouse-click event on canvas.
+
+    Arguments:
+    fun -- a function with two arguments, the coordinates of the
+           clicked point on the canvas.
+    btn -- the number of the mouse-button, defaults to 1
+
+    Example (for a TurtleScreen instance named screen)
+
+    >>> onclick(goto)
+    >>> # Subsequently clicking into the TurtleScreen will
+    >>> # make the turtle move to the clicked point.
+    >>> onclick(None)
+
+ontimer
+==========108===============ontimer=====================
+Help on function ontimer in module turtle:
+
+ontimer(fun, t=0)
+    Install a timer, which calls fun after t milliseconds.
+
+    Arguments:
+    fun -- a function with no arguments.
+    t -- a number >= 0
+
+    Example:
+
+    >>> running = True
+    >>> def f():
+    ...     if running:
+    ...             fd(50)
+    ...             lt(60)
+    ...             ontimer(f, 250)
+    ...
+    >>> f()   # makes the turtle marching around
+    >>> running = False
+
+pd
+==========109===============pd=====================
+Help on function pd in module turtle:
+
+pd()
+    Pull the pen down -- drawing when moving.
+
+    Aliases: pendown | pd | down
+
+    No argument.
+
+    Example:
+    >>> pendown()
+
+pen
+==========110===============pen=====================
+Help on function pen in module turtle:
+
+pen(pen=None, **pendict)
+    Return or set the pen's attributes.
+
+    Arguments:
+        pen -- a dictionary with some or all of the below listed keys.
+        **pendict -- one or more keyword-arguments with the below
+                     listed keys as keywords.
+
+    Return or set the pen's attributes in a 'pen-dictionary'
+    with the following key/value pairs:
+       "shown"      :   True/False
+       "pendown"    :   True/False
+       "pencolor"   :   color-string or color-tuple
+       "fillcolor"  :   color-string or color-tuple
+       "pensize"    :   positive number
+       "speed"      :   number in range 0..10
+       "resizemode" :   "auto" or "user" or "noresize"
+       "stretchfactor": (positive number, positive number)
+       "shearfactor":   number
+       "outline"    :   positive number
+       "tilt"       :   number
+
+    This dictionary can be used as argument for a subsequent
+    pen()-call to restore the former pen-state. Moreover one
+    or more of these attributes can be provided as keyword-arguments.
+    This can be used to set several pen attributes in one statement.
+
+
+    Examples:
+    >>> pen(fillcolor="black", pencolor="red", pensize=10)
+    >>> pen()
+    {'pensize': 10, 'shown': True, 'resizemode': 'auto', 'outline': 1,
+    'pencolor': 'red', 'pendown': True, 'fillcolor': 'black',
+    'stretchfactor': (1,1), 'speed': 3, 'shearfactor': 0.0}
+    >>> penstate=pen()
+    >>> color("yellow","")
+    >>> penup()
+    >>> pen()
+    {'pensize': 10, 'shown': True, 'resizemode': 'auto', 'outline': 1,
+    'pencolor': 'yellow', 'pendown': False, 'fillcolor': '',
+    'stretchfactor': (1,1), 'speed': 3, 'shearfactor': 0.0}
+    >>> p.pen(penstate, fillcolor="green")
+    >>> p.pen()
+    {'pensize': 10, 'shown': True, 'resizemode': 'auto', 'outline': 1,
+    'pencolor': 'red', 'pendown': True, 'fillcolor': 'green',
+    'stretchfactor': (1,1), 'speed': 3, 'shearfactor': 0.0}
+
+pencolor
+==========111===============pencolor=====================
+Help on function pencolor in module turtle:
+
+pencolor(*args)
+    Return or set the pencolor.
+
+    Arguments:
+    Four input formats are allowed:
+      - pencolor()
+        Return the current pencolor as color specification string,
+        possibly in hex-number format (see example).
+        May be used as input to another color/pencolor/fillcolor call.
+      - pencolor(colorstring)
+        s is a Tk color specification string, such as "red" or "yellow"
+      - pencolor((r, g, b))
+        *a tuple* of r, g, and b, which represent, an RGB color,
+        and each of r, g, and b are in the range 0..colormode,
+        where colormode is either 1.0 or 255
+      - pencolor(r, g, b)
+        r, g, and b represent an RGB color, and each of r, g, and b
+        are in the range 0..colormode
+
+    If turtleshape is a polygon, the outline of that polygon is drawn
+    with the newly set pencolor.
+
+    Example:
+    >>> pencolor('brown')
+    >>> tup = (0.2, 0.8, 0.55)
+    >>> pencolor(tup)
+    >>> pencolor()
+    '#33cc8c'
+

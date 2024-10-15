@@ -1,0 +1,268 @@
+172
+setposition
+==========131===============setposition=====================
+Help on function setposition in module turtle:
+
+setposition(x, y=None)
+    Move turtle to an absolute position.
+
+    Aliases: setpos | setposition | goto:
+
+    Arguments:
+    x -- a number      or     a pair/vector of numbers
+    y -- a number             None
+
+    call: goto(x, y)         # two coordinates
+    --or: goto((x, y))       # a pair (tuple) of coordinates
+    --or: goto(vec)          # e.g. as returned by pos()
+
+    Move turtle to an absolute position. If the pen is down,
+    a line will be drawn. The turtle's orientation does not change.
+
+    Example:
+    >>> tp = pos()
+    >>> tp
+    (0.00, 0.00)
+    >>> setpos(60,30)
+    >>> pos()
+    (60.00,30.00)
+    >>> setpos((20,80))
+    >>> pos()
+    (20.00,80.00)
+    >>> setpos(tp)
+    >>> pos()
+    (0.00,0.00)
+
+settiltangle
+==========132===============settiltangle=====================
+Help on function settiltangle in module turtle:
+
+settiltangle(angle)
+    Rotate the turtleshape to point in the specified direction
+
+    Argument: angle -- number
+
+    Rotate the turtleshape to point in the direction specified by angle,
+    regardless of its current tilt-angle. DO NOT change the turtle's
+    heading (direction of movement).
+
+    Deprecated since Python 3.1
+
+    Examples:
+    >>> shape("circle")
+    >>> shapesize(5,2)
+    >>> settiltangle(45)
+    >>> stamp()
+    >>> fd(50)
+    >>> settiltangle(-45)
+    >>> stamp()
+    >>> fd(50)
+
+setundobuffer
+==========133===============setundobuffer=====================
+Help on function setundobuffer in module turtle:
+
+setundobuffer(size)
+    Set or disable undobuffer.
+
+    Argument:
+    size -- an integer or None
+
+    If size is an integer an empty undobuffer of given size is installed.
+    Size gives the maximum number of turtle-actions that can be undone
+    by the undo() function.
+    If size is None, no undobuffer is present.
+
+    Example:
+    >>> setundobuffer(42)
+
+setup
+==========134===============setup=====================
+Help on function setup in module turtle:
+
+setup(width=0.5, height=0.75, startx=None, starty=None)
+    Set the size and position of the main window.
+
+    Arguments:
+    width: as integer a size in pixels, as float a fraction of the
+      Default is 50% of
+    height: as integer the height in pixels, as float a fraction of the
+       Default is 75% of
+    startx: if positive, starting position in pixels from the left
+      edge of the screen, if negative from the right edge
+      Default, startx=None is to center window horizontally.
+    starty: if positive, starting position in pixels from the top
+      edge of the screen, if negative from the bottom edge
+      Default, starty=None is to center window vertically.
+
+    Examples:
+    >>> setup (width=200, height=200, startx=0, starty=0)
+
+    sets window to 200x200 pixels, in upper left of screen
+
+    >>> setup(width=.75, height=0.5, startx=None, starty=None)
+
+    sets window to 75% of screen by 50% of screen and centers
+
+setworldcoordinates
+==========135===============setworldcoordinates=====================
+Help on function setworldcoordinates in module turtle:
+
+setworldcoordinates(llx, lly, urx, ury)
+    Set up a user defined coordinate-system.
+
+    Arguments:
+    llx -- a number, x-coordinate of lower left corner of canvas
+    lly -- a number, y-coordinate of lower left corner of canvas
+    urx -- a number, x-coordinate of upper right corner of canvas
+    ury -- a number, y-coordinate of upper right corner of canvas
+
+    Set up user coodinat-system and switch to mode 'world' if necessary.
+    This performs a reset. If mode 'world' is already active,
+    all drawings are redrawn according to the new coordinates.
+
+    But ATTENTION: in user-defined coordinatesystems angles may appear
+    distorted. (see Screen.mode())
+
+    Example:
+    >>> setworldcoordinates(-10,-0.5,50,1.5)
+    >>> for _ in range(36):
+    ...     left(10)
+    ...     forward(0.5)
+
+setx
+==========136===============setx=====================
+Help on function setx in module turtle:
+
+setx(x)
+    Set the turtle's first coordinate to x
+
+    Argument:
+    x -- a number (integer or float)
+
+    Set the turtle's first coordinate to x, leave second coordinate
+    unchanged.
+
+    Example:
+    >>> position()
+    (0.00, 240.00)
+    >>> setx(10)
+    >>> position()
+    (10.00, 240.00)
+
+sety
+==========137===============sety=====================
+Help on function sety in module turtle:
+
+sety(y)
+    Set the turtle's second coordinate to y
+
+    Argument:
+    y -- a number (integer or float)
+
+    Set the turtle's first coordinate to x, second coordinate remains
+    unchanged.
+
+    Example:
+    >>> position()
+    (0.00, 40.00)
+    >>> sety(-10)
+    >>> position()
+    (0.00, -10.00)
+
+shape
+==========138===============shape=====================
+Help on function shape in module turtle:
+
+shape(name=None)
+    Set turtle shape to shape with given name / return current shapename.
+
+    Optional argument:
+    name -- a string, which is a valid shapename
+
+    Set turtle shape to shape with given name or, if name is not given,
+    return name of current shape.
+    Shape with name must exist in the TurtleScreen's shape dictionary.
+    Initially there are the following polygon shapes:
+    'arrow', 'turtle', 'circle', 'square', 'triangle', 'classic'.
+    To learn about how to deal with shapes see Screen-method register_shape.
+
+    Example:
+    >>> shape()
+    'arrow'
+    >>> shape("turtle")
+    >>> shape()
+    'turtle'
+
+shapesize
+==========139===============shapesize=====================
+Help on function shapesize in module turtle:
+
+shapesize(stretch_wid=None, stretch_len=None, outline=None)
+    Set/return turtle's stretchfactors/outline. Set resizemode to "user".
+
+    Optional arguments:
+       stretch_wid : positive number
+       stretch_len : positive number
+       outline  : positive number
+
+    Return or set the pen's attributes x/y-stretchfactors and/or outline.
+    Set resizemode to "user".
+    If and only if resizemode is set to "user", the turtle will be displayed
+    stretched according to its stretchfactors:
+    stretch_wid is stretchfactor perpendicular to orientation
+    stretch_len is stretchfactor in direction of turtles orientation.
+    outline determines the width of the shapes's outline.
+
+    Examples:
+    >>> resizemode("user")
+    >>> shapesize(5, 5, 12)
+    >>> shapesize(outline=8)
+
+shapetransform
+==========140===============shapetransform=====================
+Help on function shapetransform in module turtle:
+
+shapetransform(t11=None, t12=None, t21=None, t22=None)
+    Set or return the current transformation matrix of the turtle shape.
+
+    Optional arguments: t11, t12, t21, t22 -- numbers.
+
+    If none of the matrix elements are given, return the transformation
+    matrix.
+    Otherwise set the given elements and transform the turtleshape
+    according to the matrix consisting of first row t11, t12 and
+    second row t21, 22.
+    Modify stretchfactor, shearfactor and tiltangle according to the
+    given matrix.
+
+    Examples:
+    >>> shape("square")
+    >>> shapesize(4,2)
+    >>> shearfactor(-0.5)
+    >>> shapetransform()
+    (4.0, -1.0, -0.0, 2.0)
+
+shearfactor
+==========141===============shearfactor=====================
+Help on function shearfactor in module turtle:
+
+shearfactor(shear=None)
+    Set or return the current shearfactor.
+
+    Optional argument: shear -- number, tangent of the shear angle
+
+    Shear the turtleshape according to the given shearfactor shear,
+    which is the tangent of the shear angle. DO NOT change the
+    turtle's heading (direction of movement).
+    If shear is not given: return the current shearfactor, i. e. the
+    tangent of the shear angle, by which lines parallel to the
+    heading of the turtle are sheared.
+
+    Examples:
+    >>> shape("circle")
+    >>> shapesize(5,2)
+    >>> shearfactor(0.5)
+    >>> shearfactor()
+    >>> 0.5
+

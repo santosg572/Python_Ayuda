@@ -1,0 +1,183 @@
+172
+config_dict
+==========61===============config_dict=====================
+Help on function config_dict in module turtle:
+
+config_dict(filename)
+    Convert content of config-file into dictionary.
+
+deepcopy
+==========62===============deepcopy=====================
+Help on function deepcopy in module copy:
+
+deepcopy(x, memo=None, _nil=[])
+    Deep copy operation on arbitrary Python objects.
+
+    See the module's __doc__ string for more info.
+
+degrees
+==========63===============degrees=====================
+Help on function degrees in module turtle:
+
+degrees(fullcircle=360.0)
+    Set angle measurement units to degrees.
+
+    Optional argument:
+    fullcircle -  a number
+
+    Set angle measurement units, i. e. set number
+    of 'degrees' for a full circle. Default value is
+    360 degrees.
+
+    Example:
+    >>> left(90)
+    >>> heading()
+    90
+
+    Change angle measurement unit to grad (also known as gon,
+    grade, or gradian and equals 1/100-th of the right angle.)
+    >>> degrees(400.0)
+    >>> heading()
+    100
+
+delay
+==========64===============delay=====================
+Help on function delay in module turtle:
+
+delay(delay=None)
+    Return or set the drawing delay in milliseconds.
+
+    Optional argument:
+    delay -- positive integer
+
+    Example:
+    >>> delay(15)
+    >>> delay()
+    15
+
+distance
+==========65===============distance=====================
+Help on function distance in module turtle:
+
+distance(x, y=None)
+    Return the distance from the turtle to (x,y) in turtle step units.
+
+    Arguments:
+    x -- a number   or  a pair/vector of numbers   or   a turtle instance
+    y -- a number       None                            None
+
+    call: distance(x, y)         # two coordinates
+    --or: distance((x, y))       # a pair (tuple) of coordinates
+    --or: distance(vec)          # e.g. as returned by pos()
+    --or: distance(mypen)        # where mypen is another turtle
+
+    Example:
+    >>> pos()
+    (0.00, 0.00)
+    >>> distance(30,40)
+    50.0
+    >>> pen = Turtle()
+    >>> pen.forward(77)
+    >>> distance(pen)
+    77.0
+
+done
+==========66===============done=====================
+Help on function mainloop in module turtle:
+
+mainloop()
+    Starts event loop - calling Tkinter's mainloop function.
+
+    No argument.
+
+    Must be last statement in a turtle graphics program.
+    Must NOT be used if a script is run from within IDLE in -n mode
+    (No subprocess) - for interactive use of turtle graphics.
+
+    Example:
+    >>> mainloop()
+
+dot
+==========67===============dot=====================
+Help on function dot in module turtle:
+
+dot(size=None, *color)
+    Draw a dot with diameter size, using color.
+
+    Optional arguments:
+    size -- an integer >= 1 (if given)
+    color -- a colorstring or a numeric color tuple
+
+    Draw a circular dot with diameter size, using color.
+    If size is not given, the maximum of pensize+4 and 2*pensize is used.
+
+    Example:
+    >>> dot()
+    >>> fd(50); dot(20, "blue"); fd(50)
+
+down
+==========68===============down=====================
+Help on function down in module turtle:
+
+down()
+    Pull the pen down -- drawing when moving.
+
+    Aliases: pendown | pd | down
+
+    No argument.
+
+    Example:
+    >>> pendown()
+
+end_fill
+==========69===============end_fill=====================
+Help on function end_fill in module turtle:
+
+end_fill()
+    Fill the shape drawn after the call begin_fill().
+
+    No argument.
+
+    Example:
+    >>> color("black", "red")
+    >>> begin_fill()
+    >>> circle(60)
+    >>> end_fill()
+
+end_poly
+==========70===============end_poly=====================
+Help on function end_poly in module turtle:
+
+end_poly()
+    Stop recording the vertices of a polygon.
+
+    No argument.
+
+    Stop recording the vertices of a polygon. Current turtle position is
+    last point of polygon. This will be connected with the first point.
+
+    Example:
+    >>> end_poly()
+
+exitonclick
+==========71===============exitonclick=====================
+Help on function exitonclick in module turtle:
+
+exitonclick()
+    Go into mainloop until the mouse is clicked.
+
+    No arguments.
+
+    Bind bye() method to mouseclick on TurtleScreen.
+    If "using_IDLE" - value in configuration dictionary is False
+    (default value), enter mainloop.
+    If IDLE with -n switch (no subprocess) is used, this value should be
+    set to True in turtle.cfg. In this case IDLE's mainloop
+    is active also for the client script.
+
+    This is a method of the Screen-class and not available for
+    TurtleScreen instances.
+
+    Example:
+    >>> exitonclick()
+

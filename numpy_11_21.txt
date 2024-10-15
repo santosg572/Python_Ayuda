@@ -1,0 +1,12 @@
+172
+Terminator
+Turtle
+TurtleGraphicsError
+TurtleScreen
+TurtleScreenBase
+Vec2D
+_CFG
+_LANGUAGE
+_Root
+_Screen
+_TurtleImage
