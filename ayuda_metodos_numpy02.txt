@@ -1,0 +1,3359 @@
+21
+Help on module numpy.lib.scimath in numpy.lib:
+
+NAME
+    numpy.lib.scimath
+
+DESCRIPTION
+    Wrapper functions to more user-friendly calling of certain math functions
+    whose output data-type is different than the input data-type in certain
+    domains of the input.
+
+    For example, for functions like `log` with branch cuts, the versions in this
+    module provide the mathematically valid answers in the complex plane::
+
+      >>> import math
+      >>> np.emath.log(-math.exp(1)) == (1+1j*math.pi)
+      True
+
+    Similarly, `sqrt`, other base logarithms, `power` and trig functions are
+    correctly handled.  See their respective docstrings for specific examples.
+
+    Functions
+    ---------
+
+    .. autosummary::
+       :toctree: generated/
+
+       sqrt
+       log
+       log2
+       logn
+       log10
+       power
+       arccos
+       arcsin
+       arctanh
+
+FUNCTIONS
+    arccos(x)
+        Compute the inverse cosine of x.
+
+        Return the "principal value" (for a description of this, see
+        `numpy.arccos`) of the inverse cosine of `x`. For real `x` such that
+        `abs(x) <= 1`, this is a real number in the closed interval
+        :math:`[0, \pi]`.  Otherwise, the complex principle value is returned.
+
+        Parameters
+        ----------
+        x : array_like or scalar
+           The value(s) whose arccos is (are) required.
+
+        Returns
+        -------
+        out : ndarray or scalar
+           The inverse cosine(s) of the `x` value(s). If `x` was a scalar, so
+           is `out`, otherwise an array object is returned.
+
+        See Also
+        --------
+        numpy.arccos
+
+        Notes
+        -----
+        For an arccos() that returns ``NAN`` when real `x` is not in the
+        interval ``[-1,1]``, use `numpy.arccos`.
+
+        Examples
+        --------
+        >>> np.set_printoptions(precision=4)
+
+        >>> np.emath.arccos(1) # a scalar is returned
+        0.0
+
+        >>> np.emath.arccos([1,2])
+        array([0.-0.j   , 0.-1.317j])
+
+    arcsin(x)
+        Compute the inverse sine of x.
+
+        Return the "principal value" (for a description of this, see
+        `numpy.arcsin`) of the inverse sine of `x`. For real `x` such that
+        `abs(x) <= 1`, this is a real number in the closed interval
+        :math:`[-\pi/2, \pi/2]`.  Otherwise, the complex principle value is
+        returned.
+
+        Parameters
+        ----------
+        x : array_like or scalar
+           The value(s) whose arcsin is (are) required.
+
+        Returns
+        -------
+        out : ndarray or scalar
+           The inverse sine(s) of the `x` value(s). If `x` was a scalar, so
+           is `out`, otherwise an array object is returned.
+
+        See Also
+        --------
+        numpy.arcsin
+
+        Notes
+        -----
+        For an arcsin() that returns ``NAN`` when real `x` is not in the
+        interval ``[-1,1]``, use `numpy.arcsin`.
+
+        Examples
+        --------
+        >>> np.set_printoptions(precision=4)
+
+        >>> np.emath.arcsin(0)
+        0.0
+
+        >>> np.emath.arcsin([0,1])
+        array([0.    , 1.5708])
+
+    arctanh(x)
+        Compute the inverse hyperbolic tangent of `x`.
+
+        Return the "principal value" (for a description of this, see
+        `numpy.arctanh`) of ``arctanh(x)``. For real `x` such that
+        ``abs(x) < 1``, this is a real number.  If `abs(x) > 1`, or if `x` is
+        complex, the result is complex. Finally, `x = 1` returns``inf`` and
+        ``x=-1`` returns ``-inf``.
+
+        Parameters
+        ----------
+        x : array_like
+           The value(s) whose arctanh is (are) required.
+
+        Returns
+        -------
+        out : ndarray or scalar
+           The inverse hyperbolic tangent(s) of the `x` value(s). If `x` was
+           a scalar so is `out`, otherwise an array is returned.
+
+
+        See Also
+        --------
+        numpy.arctanh
+
+        Notes
+        -----
+        For an arctanh() that returns ``NAN`` when real `x` is not in the
+        interval ``(-1,1)``, use `numpy.arctanh` (this latter, however, does
+        return +/-inf for ``x = +/-1``).
+
+        Examples
+        --------
+        >>> np.set_printoptions(precision=4)
+
+        >>> from numpy.testing import suppress_warnings
+        >>> with suppress_warnings() as sup:
+        ...     sup.filter(RuntimeWarning)
+        ...     np.emath.arctanh(np.eye(2))
+        array([[inf,  0.],
+               [ 0., inf]])
+        >>> np.emath.arctanh([1j])
+        array([0.+0.7854j])
+
+    log(x)
+        Compute the natural logarithm of `x`.
+
+        Return the "principal value" (for a description of this, see `numpy.log`)
+        of :math:`log_e(x)`. For real `x > 0`, this is a real number (``log(0)``
+        returns ``-inf`` and ``log(np.inf)`` returns ``inf``). Otherwise, the
+        complex principle value is returned.
+
+        Parameters
+        ----------
+        x : array_like
+           The value(s) whose log is (are) required.
+
+        Returns
+        -------
+        out : ndarray or scalar
+           The log of the `x` value(s). If `x` was a scalar, so is `out`,
+           otherwise an array is returned.
+
+        See Also
+        --------
+        numpy.log
+
+        Notes
+        -----
+        For a log() that returns ``NAN`` when real `x < 0`, use `numpy.log`
+        (note, however, that otherwise `numpy.log` and this `log` are identical,
+        i.e., both return ``-inf`` for `x = 0`, ``inf`` for `x = inf`, and,
+        notably, the complex principle value if ``x.imag != 0``).
+
+        Examples
+        --------
+        >>> np.emath.log(np.exp(1))
+        1.0
+
+        Negative arguments are handled "correctly" (recall that
+        ``exp(log(x)) == x`` does *not* hold for real ``x < 0``):
+
+        >>> np.emath.log(-np.exp(1)) == (1 + np.pi * 1j)
+        True
+
+    log10(x)
+        Compute the logarithm base 10 of `x`.
+
+        Return the "principal value" (for a description of this, see
+        `numpy.log10`) of :math:`log_{10}(x)`. For real `x > 0`, this
+        is a real number (``log10(0)`` returns ``-inf`` and ``log10(np.inf)``
+        returns ``inf``). Otherwise, the complex principle value is returned.
+
+        Parameters
+        ----------
+        x : array_like or scalar
+           The value(s) whose log base 10 is (are) required.
+
+        Returns
+        -------
+        out : ndarray or scalar
+           The log base 10 of the `x` value(s). If `x` was a scalar, so is `out`,
+           otherwise an array object is returned.
+
+        See Also
+        --------
+        numpy.log10
+
+        Notes
+        -----
+        For a log10() that returns ``NAN`` when real `x < 0`, use `numpy.log10`
+        (note, however, that otherwise `numpy.log10` and this `log10` are
+        identical, i.e., both return ``-inf`` for `x = 0`, ``inf`` for `x = inf`,
+        and, notably, the complex principle value if ``x.imag != 0``).
+
+        Examples
+        --------
+
+        (We set the printing precision so the example can be auto-tested)
+
+        >>> np.set_printoptions(precision=4)
+
+        >>> np.emath.log10(10**1)
+        1.0
+
+        >>> np.emath.log10([-10**1, -10**2, 10**2])
+        array([1.+1.3644j, 2.+1.3644j, 2.+0.j    ])
+
+    log2(x)
+        Compute the logarithm base 2 of `x`.
+
+        Return the "principal value" (for a description of this, see
+        `numpy.log2`) of :math:`log_2(x)`. For real `x > 0`, this is
+        a real number (``log2(0)`` returns ``-inf`` and ``log2(np.inf)`` returns
+        ``inf``). Otherwise, the complex principle value is returned.
+
+        Parameters
+        ----------
+        x : array_like
+           The value(s) whose log base 2 is (are) required.
+
+        Returns
+        -------
+        out : ndarray or scalar
+           The log base 2 of the `x` value(s). If `x` was a scalar, so is `out`,
+           otherwise an array is returned.
+
+        See Also
+        --------
+        numpy.log2
+
+        Notes
+        -----
+        For a log2() that returns ``NAN`` when real `x < 0`, use `numpy.log2`
+        (note, however, that otherwise `numpy.log2` and this `log2` are
+        identical, i.e., both return ``-inf`` for `x = 0`, ``inf`` for `x = inf`,
+        and, notably, the complex principle value if ``x.imag != 0``).
+
+        Examples
+        --------
+        We set the printing precision so the example can be auto-tested:
+
+        >>> np.set_printoptions(precision=4)
+
+        >>> np.emath.log2(8)
+        3.0
+        >>> np.emath.log2([-4, -8, 8])
+        array([2.+4.5324j, 3.+4.5324j, 3.+0.j    ])
+
+    logn(n, x)
+        Take log base n of x.
+
+        If `x` contains negative inputs, the answer is computed and returned in the
+        complex domain.
+
+        Parameters
+        ----------
+        n : array_like
+           The integer base(s) in which the log is taken.
+        x : array_like
+           The value(s) whose log base `n` is (are) required.
+
+        Returns
+        -------
+        out : ndarray or scalar
+           The log base `n` of the `x` value(s). If `x` was a scalar, so is
+           `out`, otherwise an array is returned.
+
+        Examples
+        --------
+        >>> np.set_printoptions(precision=4)
+
+        >>> np.emath.logn(2, [4, 8])
+        array([2., 3.])
+        >>> np.emath.logn(2, [-4, -8, 8])
+        array([2.+4.5324j, 3.+4.5324j, 3.+0.j    ])
+
+    power(x, p)
+        Return x to the power p, (x**p).
+
+        If `x` contains negative values, the output is converted to the
+        complex domain.
+
+        Parameters
+        ----------
+        x : array_like
+            The input value(s).
+        p : array_like of ints
+            The power(s) to which `x` is raised. If `x` contains multiple values,
+            `p` has to either be a scalar, or contain the same number of values
+            as `x`. In the latter case, the result is
+            ``x[0]**p[0], x[1]**p[1], ...``.
+
+        Returns
+        -------
+        out : ndarray or scalar
+            The result of ``x**p``. If `x` and `p` are scalars, so is `out`,
+            otherwise an array is returned.
+
+        See Also
+        --------
+        numpy.power
+
+        Examples
+        --------
+        >>> np.set_printoptions(precision=4)
+
+        >>> np.emath.power([2, 4], 2)
+        array([ 4, 16])
+        >>> np.emath.power([2, 4], -2)
+        array([0.25  ,  0.0625])
+        >>> np.emath.power([-2, 4], 2)
+        array([ 4.-0.j, 16.+0.j])
+
+    sqrt(x)
+        Compute the square root of x.
+
+        For negative input elements, a complex value is returned
+        (unlike `numpy.sqrt` which returns NaN).
+
+        Parameters
+        ----------
+        x : array_like
+           The input value(s).
+
+        Returns
+        -------
+        out : ndarray or scalar
+           The square root of `x`. If `x` was a scalar, so is `out`,
+           otherwise an array is returned.
+
+        See Also
+        --------
+        numpy.sqrt
+
+        Examples
+        --------
+        For real, non-negative inputs this works just like `numpy.sqrt`:
+
+        >>> np.emath.sqrt(1)
+        1.0
+        >>> np.emath.sqrt([1, 4])
+        array([1.,  2.])
+
+        But it automatically handles negative inputs:
+
+        >>> np.emath.sqrt(-1)
+        1j
+        >>> np.emath.sqrt([-1,4])
+        array([0.+1.j, 2.+0.j])
+
+        Different results are expected because:
+        floating point 0.0 and -0.0 are distinct.
+
+        For more control, explicitly use complex() as follows:
+
+        >>> np.emath.sqrt(complex(-4.0, 0.0))
+        2j
+        >>> np.emath.sqrt(complex(-4.0, -0.0))
+        -2j
+
+DATA
+    __all__ = ['sqrt', 'log', 'log2', 'logn', 'log10', 'power', 'arccos', ...
+
+FILE
+    /home/santosg/miniconda3/lib/python3.12/site-packages/numpy/lib/scimath.py
+
+
+None
+Help on built-in function empty in module numpy:
+
+empty(...)
+    empty(shape, dtype=float, order='C', *, like=None)
+
+    Return a new array of given shape and type, without initializing entries.
+
+    Parameters
+    ----------
+    shape : int or tuple of int
+        Shape of the empty array, e.g., ``(2, 3)`` or ``2``.
+    dtype : data-type, optional
+        Desired output data-type for the array, e.g, `numpy.int8`. Default is
+        `numpy.float64`.
+    order : {'C', 'F'}, optional, default: 'C'
+        Whether to store multi-dimensional data in row-major
+        (C-style) or column-major (Fortran-style) order in
+        memory.
+    like : array_like, optional
+        Reference object to allow the creation of arrays which are not
+        NumPy arrays. If an array-like passed in as ``like`` supports
+        the ``__array_function__`` protocol, the result will be defined
+        by it. In this case, it ensures the creation of an array object
+        compatible with that passed in via this argument.
+
+        .. versionadded:: 1.20.0
+
+    Returns
+    -------
+    out : ndarray
+        Array of uninitialized (arbitrary) data of the given shape, dtype, and
+        order.  Object arrays will be initialized to None.
+
+    See Also
+    --------
+    empty_like : Return an empty array with shape and type of input.
+    ones : Return a new array setting values to one.
+    zeros : Return a new array setting values to zero.
+    full : Return a new array of given shape filled with value.
+
+
+    Notes
+    -----
+    `empty`, unlike `zeros`, does not set the array values to zero,
+    and may therefore be marginally faster.  On the other hand, it requires
+    the user to manually set all the values in the array, and should be
+    used with caution.
+
+    Examples
+    --------
+    >>> np.empty([2, 2])
+    array([[ -9.74499359e+001,   6.69583040e-309],
+           [  2.13182611e-314,   3.06959433e-309]])         #uninitialized
+
+    >>> np.empty([2, 2], dtype=int)
+    array([[-1073741821, -1067949133],
+           [  496041986,    19249760]])                     #uninitialized
+
+None
+Help on ufunc:
+
+exp = <ufunc 'exp'>
+    exp(x, /, out=None, *, where=True, casting='same_kind', order='K', dtype=None, subok=True[, signature, extobj])
+
+    Calculate the exponential of all elements in the input array.
+
+    Parameters
+    ----------
+    x : array_like
+        Input values.
+    out : ndarray, None, or tuple of ndarray and None, optional
+        A location into which the result is stored. If provided, it must have
+        a shape that the inputs broadcast to. If not provided or None,
+        a freshly-allocated array is returned. A tuple (possible only as a
+        keyword argument) must have length equal to the number of outputs.
+    where : array_like, optional
+        This condition is broadcast over the input. At locations where the
+        condition is True, the `out` array will be set to the ufunc result.
+        Elsewhere, the `out` array will retain its original value.
+        Note that if an uninitialized `out` array is created via the default
+        ``out=None``, locations within it where the condition is False will
+        remain uninitialized.
+    **kwargs
+        For other keyword-only arguments, see the
+        :ref:`ufunc docs <ufuncs.kwargs>`.
+
+    Returns
+    -------
+    out : ndarray or scalar
+        Output array, element-wise exponential of `x`.
+        This is a scalar if `x` is a scalar.
+
+    See Also
+    --------
+    expm1 : Calculate ``exp(x) - 1`` for all elements in the array.
+    exp2  : Calculate ``2**x`` for all elements in the array.
+
+    Notes
+    -----
+    The irrational number ``e`` is also known as Euler's number.  It is
+    approximately 2.718281, and is the base of the natural logarithm,
+    ``ln`` (this means that, if :math:`x = \ln y = \log_e y`,
+    then :math:`e^x = y`. For real input, ``exp(x)`` is always positive.
+
+    For complex arguments, ``x = a + ib``, we can write
+    :math:`e^x = e^a e^{ib}`.  The first term, :math:`e^a`, is already
+    known (it is the real argument, described above).  The second term,
+    :math:`e^{ib}`, is :math:`\cos b + i \sin b`, a function with
+    magnitude 1 and a periodic phase.
+
+    References
+    ----------
+    .. [1] Wikipedia, "Exponential function",
+           https://en.wikipedia.org/wiki/Exponential_function
+    .. [2] M. Abramovitz and I. A. Stegun, "Handbook of Mathematical Functions
+           with Formulas, Graphs, and Mathematical Tables," Dover, 1964, p. 69,
+           https://personal.math.ubc.ca/~cbm/aands/page_69.htm
+
+    Examples
+    --------
+    Plot the magnitude and phase of ``exp(x)`` in the complex plane:
+
+    >>> import matplotlib.pyplot as plt
+
+    >>> x = np.linspace(-2*np.pi, 2*np.pi, 100)
+    >>> xx = x + 1j * x[:, np.newaxis] # a + ib over complex plane
+    >>> out = np.exp(xx)
+
+    >>> plt.subplot(121)
+    >>> plt.imshow(np.abs(out),
+    ...            extent=[-2*np.pi, 2*np.pi, -2*np.pi, 2*np.pi], cmap='gray')
+    >>> plt.title('Magnitude of exp(x)')
+
+    >>> plt.subplot(122)
+    >>> plt.imshow(np.angle(out),
+    ...            extent=[-2*np.pi, 2*np.pi, -2*np.pi, 2*np.pi], cmap='hsv')
+    >>> plt.title('Phase (angle) of exp(x)')
+    >>> plt.show()
+
+None
+Help on function eye in module numpy:
+
+eye(N, M=None, k=0, dtype=<class 'float'>, order='C', *, like=None)
+    Return a 2-D array with ones on the diagonal and zeros elsewhere.
+
+    Parameters
+    ----------
+    N : int
+      Number of rows in the output.
+    M : int, optional
+      Number of columns in the output. If None, defaults to `N`.
+    k : int, optional
+      Index of the diagonal: 0 (the default) refers to the main diagonal,
+      a positive value refers to an upper diagonal, and a negative value
+      to a lower diagonal.
+    dtype : data-type, optional
+      Data-type of the returned array.
+    order : {'C', 'F'}, optional
+        Whether the output should be stored in row-major (C-style) or
+        column-major (Fortran-style) order in memory.
+
+        .. versionadded:: 1.14.0
+    like : array_like, optional
+        Reference object to allow the creation of arrays which are not
+        NumPy arrays. If an array-like passed in as ``like`` supports
+        the ``__array_function__`` protocol, the result will be defined
+        by it. In this case, it ensures the creation of an array object
+        compatible with that passed in via this argument.
+
+        .. versionadded:: 1.20.0
+
+    Returns
+    -------
+    I : ndarray of shape (N,M)
+      An array where all elements are equal to zero, except for the `k`-th
+      diagonal, whose values are equal to one.
+
+    See Also
+    --------
+    identity : (almost) equivalent function
+    diag : diagonal 2-D array from a 1-D array specified by the user.
+
+    Examples
+    --------
+    >>> np.eye(2, dtype=int)
+    array([[1, 0],
+           [0, 1]])
+    >>> np.eye(3, k=1)
+    array([[0.,  1.,  0.],
+           [0.,  0.,  1.],
+           [0.,  0.,  0.]])
+
+None
+Help on package numpy.fft in numpy:
+
+NAME
+    numpy.fft
+
+DESCRIPTION
+    Discrete Fourier Transform (:mod:`numpy.fft`)
+    =============================================
+
+    .. currentmodule:: numpy.fft
+
+    The SciPy module `scipy.fft` is a more comprehensive superset
+    of ``numpy.fft``, which includes only a basic set of routines.
+
+    Standard FFTs
+    -------------
+
+    .. autosummary::
+       :toctree: generated/
+
+       fft       Discrete Fourier transform.
+       ifft      Inverse discrete Fourier transform.
+       fft2      Discrete Fourier transform in two dimensions.
+       ifft2     Inverse discrete Fourier transform in two dimensions.
+       fftn      Discrete Fourier transform in N-dimensions.
+       ifftn     Inverse discrete Fourier transform in N dimensions.
+
+    Real FFTs
+    ---------
+
+    .. autosummary::
+       :toctree: generated/
+
+       rfft      Real discrete Fourier transform.
+       irfft     Inverse real discrete Fourier transform.
+       rfft2     Real discrete Fourier transform in two dimensions.
+       irfft2    Inverse real discrete Fourier transform in two dimensions.
+       rfftn     Real discrete Fourier transform in N dimensions.
+       irfftn    Inverse real discrete Fourier transform in N dimensions.
+
+    Hermitian FFTs
+    --------------
+
+    .. autosummary::
+       :toctree: generated/
+
+       hfft      Hermitian discrete Fourier transform.
+       ihfft     Inverse Hermitian discrete Fourier transform.
+
+    Helper routines
+    ---------------
+
+    .. autosummary::
+       :toctree: generated/
+
+       fftfreq   Discrete Fourier Transform sample frequencies.
+       rfftfreq  DFT sample frequencies (for usage with rfft, irfft).
+       fftshift  Shift zero-frequency component to center of spectrum.
+       ifftshift Inverse of fftshift.
+
+
+    Background information
+    ----------------------
+
+    Fourier analysis is fundamentally a method for expressing a function as a
+    sum of periodic components, and for recovering the function from those
+    components.  When both the function and its Fourier transform are
+    replaced with discretized counterparts, it is called the discrete Fourier
+    transform (DFT).  The DFT has become a mainstay of numerical computing in
+    part because of a very fast algorithm for computing it, called the Fast
+    Fourier Transform (FFT), which was known to Gauss (1805) and was brought
+    to light in its current form by Cooley and Tukey [CT]_.  Press et al. [NR]_
+    provide an accessible introduction to Fourier analysis and its
+    applications.
+
+    Because the discrete Fourier transform separates its input into
+    components that contribute at discrete frequencies, it has a great number
+    of applications in digital signal processing, e.g., for filtering, and in
+    this context the discretized input to the transform is customarily
+    referred to as a *signal*, which exists in the *time domain*.  The output
+    is called a *spectrum* or *transform* and exists in the *frequency
+    domain*.
+
+    Implementation details
+    ----------------------
+
+    There are many ways to define the DFT, varying in the sign of the
+    exponent, normalization, etc.  In this implementation, the DFT is defined
+    as
+
+    .. math::
+       A_k =  \sum_{m=0}^{n-1} a_m \exp\left\{-2\pi i{mk \over n}\right\}
+       \qquad k = 0,\ldots,n-1.
+
+    The DFT is in general defined for complex inputs and outputs, and a
+    single-frequency component at linear frequency :math:`f` is
+    represented by a complex exponential
+    :math:`a_m = \exp\{2\pi i\,f m\Delta t\}`, where :math:`\Delta t`
+    is the sampling interval.
+
+    The values in the result follow so-called "standard" order: If ``A =
+    fft(a, n)``, then ``A[0]`` contains the zero-frequency term (the sum of
+    the signal), which is always purely real for real inputs. Then ``A[1:n/2]``
+    contains the positive-frequency terms, and ``A[n/2+1:]`` contains the
+    negative-frequency terms, in order of decreasingly negative frequency.
+    For an even number of input points, ``A[n/2]`` represents both positive and
+    negative Nyquist frequency, and is also purely real for real input.  For
+    an odd number of input points, ``A[(n-1)/2]`` contains the largest positive
+    frequency, while ``A[(n+1)/2]`` contains the largest negative frequency.
+    The routine ``np.fft.fftfreq(n)`` returns an array giving the frequencies
+    of corresponding elements in the output.  The routine
+    ``np.fft.fftshift(A)`` shifts transforms and their frequencies to put the
+    zero-frequency components in the middle, and ``np.fft.ifftshift(A)`` undoes
+    that shift.
+
+    When the input `a` is a time-domain signal and ``A = fft(a)``, ``np.abs(A)``
+    is its amplitude spectrum and ``np.abs(A)**2`` is its power spectrum.
+    The phase spectrum is obtained by ``np.angle(A)``.
+
+    The inverse DFT is defined as
+
+    .. math::
+       a_m = \frac{1}{n}\sum_{k=0}^{n-1}A_k\exp\left\{2\pi i{mk\over n}\right\}
+       \qquad m = 0,\ldots,n-1.
+
+    It differs from the forward transform by the sign of the exponential
+    argument and the default normalization by :math:`1/n`.
+
+    Type Promotion
+    --------------
+
+    `numpy.fft` promotes ``float32`` and ``complex64`` arrays to ``float64`` and
+    ``complex128`` arrays respectively. For an FFT implementation that does not
+    promote input arrays, see `scipy.fftpack`.
+
+    Normalization
+    -------------
+
+    The argument ``norm`` indicates which direction of the pair of direct/inverse
+    transforms is scaled and with what normalization factor.
+    The default normalization (``"backward"``) has the direct (forward) transforms
+    unscaled and the inverse (backward) transforms scaled by :math:`1/n`. It is
+    possible to obtain unitary transforms by setting the keyword argument ``norm``
+    to ``"ortho"`` so that both direct and inverse transforms are scaled by
+    :math:`1/\sqrt{n}`. Finally, setting the keyword argument ``norm`` to
+    ``"forward"`` has the direct transforms scaled by :math:`1/n` and the inverse
+    transforms unscaled (i.e. exactly opposite to the default ``"backward"``).
+    `None` is an alias of the default option ``"backward"`` for backward
+    compatibility.
+
+    Real and Hermitian transforms
+    -----------------------------
+
+    When the input is purely real, its transform is Hermitian, i.e., the
+    component at frequency :math:`f_k` is the complex conjugate of the
+    component at frequency :math:`-f_k`, which means that for real
+    inputs there is no information in the negative frequency components that
+    is not already available from the positive frequency components.
+    The family of `rfft` functions is
+    designed to operate on real inputs, and exploits this symmetry by
+    computing only the positive frequency components, up to and including the
+    Nyquist frequency.  Thus, ``n`` input points produce ``n/2+1`` complex
+    output points.  The inverses of this family assumes the same symmetry of
+    its input, and for an output of ``n`` points uses ``n/2+1`` input points.
+
+    Correspondingly, when the spectrum is purely real, the signal is
+    Hermitian.  The `hfft` family of functions exploits this symmetry by
+    using ``n/2+1`` complex points in the input (time) domain for ``n`` real
+    points in the frequency domain.
+
+    In higher dimensions, FFTs are used, e.g., for image analysis and
+    filtering.  The computational efficiency of the FFT means that it can
+    also be a faster way to compute large convolutions, using the property
+    that a convolution in the time domain is equivalent to a point-by-point
+    multiplication in the frequency domain.
+
+    Higher dimensions
+    -----------------
+
+    In two dimensions, the DFT is defined as
+
+    .. math::
+       A_{kl} =  \sum_{m=0}^{M-1} \sum_{n=0}^{N-1}
+       a_{mn}\exp\left\{-2\pi i \left({mk\over M}+{nl\over N}\right)\right\}
+       \qquad k = 0, \ldots, M-1;\quad l = 0, \ldots, N-1,
+
+    which extends in the obvious way to higher dimensions, and the inverses
+    in higher dimensions also extend in the same way.
+
+    References
+    ----------
+
+    .. [CT] Cooley, James W., and John W. Tukey, 1965, "An algorithm for the
+            machine calculation of complex Fourier series," *Math. Comput.*
+            19: 297-301.
+
+    .. [NR] Press, W., Teukolsky, S., Vetterline, W.T., and Flannery, B.P.,
+            2007, *Numerical Recipes: The Art of Scientific Computing*, ch.
+            12-13.  Cambridge Univ. Press, Cambridge, UK.
+
+    Examples
+    --------
+
+    For examples, see the various functions.
+
+PACKAGE CONTENTS
+    _pocketfft
+    _pocketfft_internal
+    helper
+    tests (package)
+
+FUNCTIONS
+    fft(a, n=None, axis=-1, norm=None)
+        Compute the one-dimensional discrete Fourier Transform.
+
+        This function computes the one-dimensional *n*-point discrete Fourier
+        Transform (DFT) with the efficient Fast Fourier Transform (FFT)
+        algorithm [CT].
+
+        Parameters
+        ----------
+        a : array_like
+            Input array, can be complex.
+        n : int, optional
+            Length of the transformed axis of the output.
+            If `n` is smaller than the length of the input, the input is cropped.
+            If it is larger, the input is padded with zeros.  If `n` is not given,
+            the length of the input along the axis specified by `axis` is used.
+        axis : int, optional
+            Axis over which to compute the FFT.  If not given, the last axis is
+            used.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : complex ndarray
+            The truncated or zero-padded input, transformed along the axis
+            indicated by `axis`, or the last one if `axis` is not specified.
+
+        Raises
+        ------
+        IndexError
+            If `axis` is not a valid axis of `a`.
+
+        See Also
+        --------
+        numpy.fft : for definition of the DFT and conventions used.
+        ifft : The inverse of `fft`.
+        fft2 : The two-dimensional FFT.
+        fftn : The *n*-dimensional FFT.
+        rfftn : The *n*-dimensional FFT of real input.
+        fftfreq : Frequency bins for given FFT parameters.
+
+        Notes
+        -----
+        FFT (Fast Fourier Transform) refers to a way the discrete Fourier
+        Transform (DFT) can be calculated efficiently, by using symmetries in the
+        calculated terms.  The symmetry is highest when `n` is a power of 2, and
+        the transform is therefore most efficient for these sizes.
+
+        The DFT is defined, with the conventions used in this implementation, in
+        the documentation for the `numpy.fft` module.
+
+        References
+        ----------
+        .. [CT] Cooley, James W., and John W. Tukey, 1965, "An algorithm for the
+                machine calculation of complex Fourier series," *Math. Comput.*
+                19: 297-301.
+
+        Examples
+        --------
+        >>> np.fft.fft(np.exp(2j * np.pi * np.arange(8) / 8))
+        array([-2.33486982e-16+1.14423775e-17j,  8.00000000e+00-1.25557246e-15j,
+                2.33486982e-16+2.33486982e-16j,  0.00000000e+00+1.22464680e-16j,
+               -1.14423775e-17+2.33486982e-16j,  0.00000000e+00+5.20784380e-16j,
+                1.14423775e-17+1.14423775e-17j,  0.00000000e+00+1.22464680e-16j])
+
+        In this example, real input has an FFT which is Hermitian, i.e., symmetric
+        in the real part and anti-symmetric in the imaginary part, as described in
+        the `numpy.fft` documentation:
+
+        >>> import matplotlib.pyplot as plt
+        >>> t = np.arange(256)
+        >>> sp = np.fft.fft(np.sin(t))
+        >>> freq = np.fft.fftfreq(t.shape[-1])
+        >>> plt.plot(freq, sp.real, freq, sp.imag)
+        [<matplotlib.lines.Line2D object at 0x...>, <matplotlib.lines.Line2D object at 0x...>]
+        >>> plt.show()
+
+    fft2(a, s=None, axes=(-2, -1), norm=None)
+        Compute the 2-dimensional discrete Fourier Transform.
+
+        This function computes the *n*-dimensional discrete Fourier Transform
+        over any axes in an *M*-dimensional array by means of the
+        Fast Fourier Transform (FFT).  By default, the transform is computed over
+        the last two axes of the input array, i.e., a 2-dimensional FFT.
+
+        Parameters
+        ----------
+        a : array_like
+            Input array, can be complex
+        s : sequence of ints, optional
+            Shape (length of each transformed axis) of the output
+            (``s[0]`` refers to axis 0, ``s[1]`` to axis 1, etc.).
+            This corresponds to ``n`` for ``fft(x, n)``.
+            Along each axis, if the given shape is smaller than that of the input,
+            the input is cropped.  If it is larger, the input is padded with zeros.
+            if `s` is not given, the shape of the input along the axes specified
+            by `axes` is used.
+        axes : sequence of ints, optional
+            Axes over which to compute the FFT.  If not given, the last two
+            axes are used.  A repeated index in `axes` means the transform over
+            that axis is performed multiple times.  A one-element sequence means
+            that a one-dimensional FFT is performed.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : complex ndarray
+            The truncated or zero-padded input, transformed along the axes
+            indicated by `axes`, or the last two axes if `axes` is not given.
+
+        Raises
+        ------
+        ValueError
+            If `s` and `axes` have different length, or `axes` not given and
+            ``len(s) != 2``.
+        IndexError
+            If an element of `axes` is larger than than the number of axes of `a`.
+
+        See Also
+        --------
+        numpy.fft : Overall view of discrete Fourier transforms, with definitions
+             and conventions used.
+        ifft2 : The inverse two-dimensional FFT.
+        fft : The one-dimensional FFT.
+        fftn : The *n*-dimensional FFT.
+        fftshift : Shifts zero-frequency terms to the center of the array.
+            For two-dimensional input, swaps first and third quadrants, and second
+            and fourth quadrants.
+
+        Notes
+        -----
+        `fft2` is just `fftn` with a different default for `axes`.
+
+        The output, analogously to `fft`, contains the term for zero frequency in
+        the low-order corner of the transformed axes, the positive frequency terms
+        in the first half of these axes, the term for the Nyquist frequency in the
+        middle of the axes and the negative frequency terms in the second half of
+        the axes, in order of decreasingly negative frequency.
+
+        See `fftn` for details and a plotting example, and `numpy.fft` for
+        definitions and conventions used.
+
+
+        Examples
+        --------
+        >>> a = np.mgrid[:5, :5][0]
+        >>> np.fft.fft2(a)
+        array([[ 50.  +0.j        ,   0.  +0.j        ,   0.  +0.j        , # may vary
+                  0.  +0.j        ,   0.  +0.j        ],
+               [-12.5+17.20477401j,   0.  +0.j        ,   0.  +0.j        ,
+                  0.  +0.j        ,   0.  +0.j        ],
+               [-12.5 +4.0614962j ,   0.  +0.j        ,   0.  +0.j        ,
+                  0.  +0.j        ,   0.  +0.j        ],
+               [-12.5 -4.0614962j ,   0.  +0.j        ,   0.  +0.j        ,
+                  0.  +0.j        ,   0.  +0.j        ],
+               [-12.5-17.20477401j,   0.  +0.j        ,   0.  +0.j        ,
+                  0.  +0.j        ,   0.  +0.j        ]])
+
+    fftfreq(n, d=1.0)
+        Return the Discrete Fourier Transform sample frequencies.
+
+        The returned float array `f` contains the frequency bin centers in cycles
+        per unit of the sample spacing (with zero at the start).  For instance, if
+        the sample spacing is in seconds, then the frequency unit is cycles/second.
+
+        Given a window length `n` and a sample spacing `d`::
+
+          f = [0, 1, ...,   n/2-1,     -n/2, ..., -1] / (d*n)   if n is even
+          f = [0, 1, ..., (n-1)/2, -(n-1)/2, ..., -1] / (d*n)   if n is odd
+
+        Parameters
+        ----------
+        n : int
+            Window length.
+        d : scalar, optional
+            Sample spacing (inverse of the sampling rate). Defaults to 1.
+
+        Returns
+        -------
+        f : ndarray
+            Array of length `n` containing the sample frequencies.
+
+        Examples
+        --------
+        >>> signal = np.array([-2, 8, 6, 4, 1, 0, 3, 5], dtype=float)
+        >>> fourier = np.fft.fft(signal)
+        >>> n = signal.size
+        >>> timestep = 0.1
+        >>> freq = np.fft.fftfreq(n, d=timestep)
+        >>> freq
+        array([ 0.  ,  1.25,  2.5 , ..., -3.75, -2.5 , -1.25])
+
+    fftn(a, s=None, axes=None, norm=None)
+        Compute the N-dimensional discrete Fourier Transform.
+
+        This function computes the *N*-dimensional discrete Fourier Transform over
+        any number of axes in an *M*-dimensional array by means of the Fast Fourier
+        Transform (FFT).
+
+        Parameters
+        ----------
+        a : array_like
+            Input array, can be complex.
+        s : sequence of ints, optional
+            Shape (length of each transformed axis) of the output
+            (``s[0]`` refers to axis 0, ``s[1]`` to axis 1, etc.).
+            This corresponds to ``n`` for ``fft(x, n)``.
+            Along any axis, if the given shape is smaller than that of the input,
+            the input is cropped.  If it is larger, the input is padded with zeros.
+            if `s` is not given, the shape of the input along the axes specified
+            by `axes` is used.
+        axes : sequence of ints, optional
+            Axes over which to compute the FFT.  If not given, the last ``len(s)``
+            axes are used, or all axes if `s` is also not specified.
+            Repeated indices in `axes` means that the transform over that axis is
+            performed multiple times.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : complex ndarray
+            The truncated or zero-padded input, transformed along the axes
+            indicated by `axes`, or by a combination of `s` and `a`,
+            as explained in the parameters section above.
+
+        Raises
+        ------
+        ValueError
+            If `s` and `axes` have different length.
+        IndexError
+            If an element of `axes` is larger than than the number of axes of `a`.
+
+        See Also
+        --------
+        numpy.fft : Overall view of discrete Fourier transforms, with definitions
+            and conventions used.
+        ifftn : The inverse of `fftn`, the inverse *n*-dimensional FFT.
+        fft : The one-dimensional FFT, with definitions and conventions used.
+        rfftn : The *n*-dimensional FFT of real input.
+        fft2 : The two-dimensional FFT.
+        fftshift : Shifts zero-frequency terms to centre of array
+
+        Notes
+        -----
+        The output, analogously to `fft`, contains the term for zero frequency in
+        the low-order corner of all axes, the positive frequency terms in the
+        first half of all axes, the term for the Nyquist frequency in the middle
+        of all axes and the negative frequency terms in the second half of all
+        axes, in order of decreasingly negative frequency.
+
+        See `numpy.fft` for details, definitions and conventions used.
+
+        Examples
+        --------
+        >>> a = np.mgrid[:3, :3, :3][0]
+        >>> np.fft.fftn(a, axes=(1, 2))
+        array([[[ 0.+0.j,   0.+0.j,   0.+0.j], # may vary
+                [ 0.+0.j,   0.+0.j,   0.+0.j],
+                [ 0.+0.j,   0.+0.j,   0.+0.j]],
+               [[ 9.+0.j,   0.+0.j,   0.+0.j],
+                [ 0.+0.j,   0.+0.j,   0.+0.j],
+                [ 0.+0.j,   0.+0.j,   0.+0.j]],
+               [[18.+0.j,   0.+0.j,   0.+0.j],
+                [ 0.+0.j,   0.+0.j,   0.+0.j],
+                [ 0.+0.j,   0.+0.j,   0.+0.j]]])
+        >>> np.fft.fftn(a, (2, 2), axes=(0, 1))
+        array([[[ 2.+0.j,  2.+0.j,  2.+0.j], # may vary
+                [ 0.+0.j,  0.+0.j,  0.+0.j]],
+               [[-2.+0.j, -2.+0.j, -2.+0.j],
+                [ 0.+0.j,  0.+0.j,  0.+0.j]]])
+
+        >>> import matplotlib.pyplot as plt
+        >>> [X, Y] = np.meshgrid(2 * np.pi * np.arange(200) / 12,
+        ...                      2 * np.pi * np.arange(200) / 34)
+        >>> S = np.sin(X) + np.cos(Y) + np.random.uniform(0, 1, X.shape)
+        >>> FS = np.fft.fftn(S)
+        >>> plt.imshow(np.log(np.abs(np.fft.fftshift(FS))**2))
+        <matplotlib.image.AxesImage object at 0x...>
+        >>> plt.show()
+
+    fftshift(x, axes=None)
+        Shift the zero-frequency component to the center of the spectrum.
+
+        This function swaps half-spaces for all axes listed (defaults to all).
+        Note that ``y[0]`` is the Nyquist component only if ``len(x)`` is even.
+
+        Parameters
+        ----------
+        x : array_like
+            Input array.
+        axes : int or shape tuple, optional
+            Axes over which to shift.  Default is None, which shifts all axes.
+
+        Returns
+        -------
+        y : ndarray
+            The shifted array.
+
+        See Also
+        --------
+        ifftshift : The inverse of `fftshift`.
+
+        Examples
+        --------
+        >>> freqs = np.fft.fftfreq(10, 0.1)
+        >>> freqs
+        array([ 0.,  1.,  2., ..., -3., -2., -1.])
+        >>> np.fft.fftshift(freqs)
+        array([-5., -4., -3., -2., -1.,  0.,  1.,  2.,  3.,  4.])
+
+        Shift the zero-frequency component only along the second axis:
+
+        >>> freqs = np.fft.fftfreq(9, d=1./9).reshape(3, 3)
+        >>> freqs
+        array([[ 0.,  1.,  2.],
+               [ 3.,  4., -4.],
+               [-3., -2., -1.]])
+        >>> np.fft.fftshift(freqs, axes=(1,))
+        array([[ 2.,  0.,  1.],
+               [-4.,  3.,  4.],
+               [-1., -3., -2.]])
+
+    hfft(a, n=None, axis=-1, norm=None)
+        Compute the FFT of a signal that has Hermitian symmetry, i.e., a real
+        spectrum.
+
+        Parameters
+        ----------
+        a : array_like
+            The input array.
+        n : int, optional
+            Length of the transformed axis of the output. For `n` output
+            points, ``n//2 + 1`` input points are necessary.  If the input is
+            longer than this, it is cropped.  If it is shorter than this, it is
+            padded with zeros.  If `n` is not given, it is taken to be ``2*(m-1)``
+            where ``m`` is the length of the input along the axis specified by
+            `axis`.
+        axis : int, optional
+            Axis over which to compute the FFT. If not given, the last
+            axis is used.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : ndarray
+            The truncated or zero-padded input, transformed along the axis
+            indicated by `axis`, or the last one if `axis` is not specified.
+            The length of the transformed axis is `n`, or, if `n` is not given,
+            ``2*m - 2`` where ``m`` is the length of the transformed axis of
+            the input. To get an odd number of output points, `n` must be
+            specified, for instance as ``2*m - 1`` in the typical case,
+
+        Raises
+        ------
+        IndexError
+            If `axis` is not a valid axis of `a`.
+
+        See also
+        --------
+        rfft : Compute the one-dimensional FFT for real input.
+        ihfft : The inverse of `hfft`.
+
+        Notes
+        -----
+        `hfft`/`ihfft` are a pair analogous to `rfft`/`irfft`, but for the
+        opposite case: here the signal has Hermitian symmetry in the time
+        domain and is real in the frequency domain. So here it's `hfft` for
+        which you must supply the length of the result if it is to be odd.
+
+        * even: ``ihfft(hfft(a, 2*len(a) - 2)) == a``, within roundoff error,
+        * odd: ``ihfft(hfft(a, 2*len(a) - 1)) == a``, within roundoff error.
+
+        The correct interpretation of the hermitian input depends on the length of
+        the original data, as given by `n`. This is because each input shape could
+        correspond to either an odd or even length signal. By default, `hfft`
+        assumes an even output length which puts the last entry at the Nyquist
+        frequency; aliasing with its symmetric counterpart. By Hermitian symmetry,
+        the value is thus treated as purely real. To avoid losing information, the
+        shape of the full signal **must** be given.
+
+        Examples
+        --------
+        >>> signal = np.array([1, 2, 3, 4, 3, 2])
+        >>> np.fft.fft(signal)
+        array([15.+0.j,  -4.+0.j,   0.+0.j,  -1.-0.j,   0.+0.j,  -4.+0.j]) # may vary
+        >>> np.fft.hfft(signal[:4]) # Input first half of signal
+        array([15.,  -4.,   0.,  -1.,   0.,  -4.])
+        >>> np.fft.hfft(signal, 6)  # Input entire signal and truncate
+        array([15.,  -4.,   0.,  -1.,   0.,  -4.])
+
+
+        >>> signal = np.array([[1, 1.j], [-1.j, 2]])
+        >>> np.conj(signal.T) - signal   # check Hermitian symmetry
+        array([[ 0.-0.j,  -0.+0.j], # may vary
+               [ 0.+0.j,  0.-0.j]])
+        >>> freq_spectrum = np.fft.hfft(signal)
+        >>> freq_spectrum
+        array([[ 1.,  1.],
+               [ 2., -2.]])
+
+    ifft(a, n=None, axis=-1, norm=None)
+        Compute the one-dimensional inverse discrete Fourier Transform.
+
+        This function computes the inverse of the one-dimensional *n*-point
+        discrete Fourier transform computed by `fft`.  In other words,
+        ``ifft(fft(a)) == a`` to within numerical accuracy.
+        For a general description of the algorithm and definitions,
+        see `numpy.fft`.
+
+        The input should be ordered in the same way as is returned by `fft`,
+        i.e.,
+
+        * ``a[0]`` should contain the zero frequency term,
+        * ``a[1:n//2]`` should contain the positive-frequency terms,
+        * ``a[n//2 + 1:]`` should contain the negative-frequency terms, in
+          increasing order starting from the most negative frequency.
+
+        For an even number of input points, ``A[n//2]`` represents the sum of
+        the values at the positive and negative Nyquist frequencies, as the two
+        are aliased together. See `numpy.fft` for details.
+
+        Parameters
+        ----------
+        a : array_like
+            Input array, can be complex.
+        n : int, optional
+            Length of the transformed axis of the output.
+            If `n` is smaller than the length of the input, the input is cropped.
+            If it is larger, the input is padded with zeros.  If `n` is not given,
+            the length of the input along the axis specified by `axis` is used.
+            See notes about padding issues.
+        axis : int, optional
+            Axis over which to compute the inverse DFT.  If not given, the last
+            axis is used.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : complex ndarray
+            The truncated or zero-padded input, transformed along the axis
+            indicated by `axis`, or the last one if `axis` is not specified.
+
+        Raises
+        ------
+        IndexError
+            If `axis` is not a valid axis of `a`.
+
+        See Also
+        --------
+        numpy.fft : An introduction, with definitions and general explanations.
+        fft : The one-dimensional (forward) FFT, of which `ifft` is the inverse
+        ifft2 : The two-dimensional inverse FFT.
+        ifftn : The n-dimensional inverse FFT.
+
+        Notes
+        -----
+        If the input parameter `n` is larger than the size of the input, the input
+        is padded by appending zeros at the end.  Even though this is the common
+        approach, it might lead to surprising results.  If a different padding is
+        desired, it must be performed before calling `ifft`.
+
+        Examples
+        --------
+        >>> np.fft.ifft([0, 4, 0, 0])
+        array([ 1.+0.j,  0.+1.j, -1.+0.j,  0.-1.j]) # may vary
+
+        Create and plot a band-limited signal with random phases:
+
+        >>> import matplotlib.pyplot as plt
+        >>> t = np.arange(400)
+        >>> n = np.zeros((400,), dtype=complex)
+        >>> n[40:60] = np.exp(1j*np.random.uniform(0, 2*np.pi, (20,)))
+        >>> s = np.fft.ifft(n)
+        >>> plt.plot(t, s.real, label='real')
+        [<matplotlib.lines.Line2D object at ...>]
+        >>> plt.plot(t, s.imag, '--', label='imaginary')
+        [<matplotlib.lines.Line2D object at ...>]
+        >>> plt.legend()
+        <matplotlib.legend.Legend object at ...>
+        >>> plt.show()
+
+    ifft2(a, s=None, axes=(-2, -1), norm=None)
+        Compute the 2-dimensional inverse discrete Fourier Transform.
+
+        This function computes the inverse of the 2-dimensional discrete Fourier
+        Transform over any number of axes in an M-dimensional array by means of
+        the Fast Fourier Transform (FFT).  In other words, ``ifft2(fft2(a)) == a``
+        to within numerical accuracy.  By default, the inverse transform is
+        computed over the last two axes of the input array.
+
+        The input, analogously to `ifft`, should be ordered in the same way as is
+        returned by `fft2`, i.e. it should have the term for zero frequency
+        in the low-order corner of the two axes, the positive frequency terms in
+        the first half of these axes, the term for the Nyquist frequency in the
+        middle of the axes and the negative frequency terms in the second half of
+        both axes, in order of decreasingly negative frequency.
+
+        Parameters
+        ----------
+        a : array_like
+            Input array, can be complex.
+        s : sequence of ints, optional
+            Shape (length of each axis) of the output (``s[0]`` refers to axis 0,
+            ``s[1]`` to axis 1, etc.).  This corresponds to `n` for ``ifft(x, n)``.
+            Along each axis, if the given shape is smaller than that of the input,
+            the input is cropped.  If it is larger, the input is padded with zeros.
+            if `s` is not given, the shape of the input along the axes specified
+            by `axes` is used.  See notes for issue on `ifft` zero padding.
+        axes : sequence of ints, optional
+            Axes over which to compute the FFT.  If not given, the last two
+            axes are used.  A repeated index in `axes` means the transform over
+            that axis is performed multiple times.  A one-element sequence means
+            that a one-dimensional FFT is performed.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : complex ndarray
+            The truncated or zero-padded input, transformed along the axes
+            indicated by `axes`, or the last two axes if `axes` is not given.
+
+        Raises
+        ------
+        ValueError
+            If `s` and `axes` have different length, or `axes` not given and
+            ``len(s) != 2``.
+        IndexError
+            If an element of `axes` is larger than than the number of axes of `a`.
+
+        See Also
+        --------
+        numpy.fft : Overall view of discrete Fourier transforms, with definitions
+             and conventions used.
+        fft2 : The forward 2-dimensional FFT, of which `ifft2` is the inverse.
+        ifftn : The inverse of the *n*-dimensional FFT.
+        fft : The one-dimensional FFT.
+        ifft : The one-dimensional inverse FFT.
+
+        Notes
+        -----
+        `ifft2` is just `ifftn` with a different default for `axes`.
+
+        See `ifftn` for details and a plotting example, and `numpy.fft` for
+        definition and conventions used.
+
+        Zero-padding, analogously with `ifft`, is performed by appending zeros to
+        the input along the specified dimension.  Although this is the common
+        approach, it might lead to surprising results.  If another form of zero
+        padding is desired, it must be performed before `ifft2` is called.
+
+        Examples
+        --------
+        >>> a = 4 * np.eye(4)
+        >>> np.fft.ifft2(a)
+        array([[1.+0.j,  0.+0.j,  0.+0.j,  0.+0.j], # may vary
+               [0.+0.j,  0.+0.j,  0.+0.j,  1.+0.j],
+               [0.+0.j,  0.+0.j,  1.+0.j,  0.+0.j],
+               [0.+0.j,  1.+0.j,  0.+0.j,  0.+0.j]])
+
+    ifftn(a, s=None, axes=None, norm=None)
+        Compute the N-dimensional inverse discrete Fourier Transform.
+
+        This function computes the inverse of the N-dimensional discrete
+        Fourier Transform over any number of axes in an M-dimensional array by
+        means of the Fast Fourier Transform (FFT).  In other words,
+        ``ifftn(fftn(a)) == a`` to within numerical accuracy.
+        For a description of the definitions and conventions used, see `numpy.fft`.
+
+        The input, analogously to `ifft`, should be ordered in the same way as is
+        returned by `fftn`, i.e. it should have the term for zero frequency
+        in all axes in the low-order corner, the positive frequency terms in the
+        first half of all axes, the term for the Nyquist frequency in the middle
+        of all axes and the negative frequency terms in the second half of all
+        axes, in order of decreasingly negative frequency.
+
+        Parameters
+        ----------
+        a : array_like
+            Input array, can be complex.
+        s : sequence of ints, optional
+            Shape (length of each transformed axis) of the output
+            (``s[0]`` refers to axis 0, ``s[1]`` to axis 1, etc.).
+            This corresponds to ``n`` for ``ifft(x, n)``.
+            Along any axis, if the given shape is smaller than that of the input,
+            the input is cropped.  If it is larger, the input is padded with zeros.
+            if `s` is not given, the shape of the input along the axes specified
+            by `axes` is used.  See notes for issue on `ifft` zero padding.
+        axes : sequence of ints, optional
+            Axes over which to compute the IFFT.  If not given, the last ``len(s)``
+            axes are used, or all axes if `s` is also not specified.
+            Repeated indices in `axes` means that the inverse transform over that
+            axis is performed multiple times.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : complex ndarray
+            The truncated or zero-padded input, transformed along the axes
+            indicated by `axes`, or by a combination of `s` or `a`,
+            as explained in the parameters section above.
+
+        Raises
+        ------
+        ValueError
+            If `s` and `axes` have different length.
+        IndexError
+            If an element of `axes` is larger than than the number of axes of `a`.
+
+        See Also
+        --------
+        numpy.fft : Overall view of discrete Fourier transforms, with definitions
+             and conventions used.
+        fftn : The forward *n*-dimensional FFT, of which `ifftn` is the inverse.
+        ifft : The one-dimensional inverse FFT.
+        ifft2 : The two-dimensional inverse FFT.
+        ifftshift : Undoes `fftshift`, shifts zero-frequency terms to beginning
+            of array.
+
+        Notes
+        -----
+        See `numpy.fft` for definitions and conventions used.
+
+        Zero-padding, analogously with `ifft`, is performed by appending zeros to
+        the input along the specified dimension.  Although this is the common
+        approach, it might lead to surprising results.  If another form of zero
+        padding is desired, it must be performed before `ifftn` is called.
+
+        Examples
+        --------
+        >>> a = np.eye(4)
+        >>> np.fft.ifftn(np.fft.fftn(a, axes=(0,)), axes=(1,))
+        array([[1.+0.j,  0.+0.j,  0.+0.j,  0.+0.j], # may vary
+               [0.+0.j,  1.+0.j,  0.+0.j,  0.+0.j],
+               [0.+0.j,  0.+0.j,  1.+0.j,  0.+0.j],
+               [0.+0.j,  0.+0.j,  0.+0.j,  1.+0.j]])
+
+
+        Create and plot an image with band-limited frequency content:
+
+        >>> import matplotlib.pyplot as plt
+        >>> n = np.zeros((200,200), dtype=complex)
+        >>> n[60:80, 20:40] = np.exp(1j*np.random.uniform(0, 2*np.pi, (20, 20)))
+        >>> im = np.fft.ifftn(n).real
+        >>> plt.imshow(im)
+        <matplotlib.image.AxesImage object at 0x...>
+        >>> plt.show()
+
+    ifftshift(x, axes=None)
+        The inverse of `fftshift`. Although identical for even-length `x`, the
+        functions differ by one sample for odd-length `x`.
+
+        Parameters
+        ----------
+        x : array_like
+            Input array.
+        axes : int or shape tuple, optional
+            Axes over which to calculate.  Defaults to None, which shifts all axes.
+
+        Returns
+        -------
+        y : ndarray
+            The shifted array.
+
+        See Also
+        --------
+        fftshift : Shift zero-frequency component to the center of the spectrum.
+
+        Examples
+        --------
+        >>> freqs = np.fft.fftfreq(9, d=1./9).reshape(3, 3)
+        >>> freqs
+        array([[ 0.,  1.,  2.],
+               [ 3.,  4., -4.],
+               [-3., -2., -1.]])
+        >>> np.fft.ifftshift(np.fft.fftshift(freqs))
+        array([[ 0.,  1.,  2.],
+               [ 3.,  4., -4.],
+               [-3., -2., -1.]])
+
+    ihfft(a, n=None, axis=-1, norm=None)
+        Compute the inverse FFT of a signal that has Hermitian symmetry.
+
+        Parameters
+        ----------
+        a : array_like
+            Input array.
+        n : int, optional
+            Length of the inverse FFT, the number of points along
+            transformation axis in the input to use.  If `n` is smaller than
+            the length of the input, the input is cropped.  If it is larger,
+            the input is padded with zeros. If `n` is not given, the length of
+            the input along the axis specified by `axis` is used.
+        axis : int, optional
+            Axis over which to compute the inverse FFT. If not given, the last
+            axis is used.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : complex ndarray
+            The truncated or zero-padded input, transformed along the axis
+            indicated by `axis`, or the last one if `axis` is not specified.
+            The length of the transformed axis is ``n//2 + 1``.
+
+        See also
+        --------
+        hfft, irfft
+
+        Notes
+        -----
+        `hfft`/`ihfft` are a pair analogous to `rfft`/`irfft`, but for the
+        opposite case: here the signal has Hermitian symmetry in the time
+        domain and is real in the frequency domain. So here it's `hfft` for
+        which you must supply the length of the result if it is to be odd:
+
+        * even: ``ihfft(hfft(a, 2*len(a) - 2)) == a``, within roundoff error,
+        * odd: ``ihfft(hfft(a, 2*len(a) - 1)) == a``, within roundoff error.
+
+        Examples
+        --------
+        >>> spectrum = np.array([ 15, -4, 0, -1, 0, -4])
+        >>> np.fft.ifft(spectrum)
+        array([1.+0.j,  2.+0.j,  3.+0.j,  4.+0.j,  3.+0.j,  2.+0.j]) # may vary
+        >>> np.fft.ihfft(spectrum)
+        array([ 1.-0.j,  2.-0.j,  3.-0.j,  4.-0.j]) # may vary
+
+    irfft(a, n=None, axis=-1, norm=None)
+        Computes the inverse of `rfft`.
+
+        This function computes the inverse of the one-dimensional *n*-point
+        discrete Fourier Transform of real input computed by `rfft`.
+        In other words, ``irfft(rfft(a), len(a)) == a`` to within numerical
+        accuracy. (See Notes below for why ``len(a)`` is necessary here.)
+
+        The input is expected to be in the form returned by `rfft`, i.e. the
+        real zero-frequency term followed by the complex positive frequency terms
+        in order of increasing frequency.  Since the discrete Fourier Transform of
+        real input is Hermitian-symmetric, the negative frequency terms are taken
+        to be the complex conjugates of the corresponding positive frequency terms.
+
+        Parameters
+        ----------
+        a : array_like
+            The input array.
+        n : int, optional
+            Length of the transformed axis of the output.
+            For `n` output points, ``n//2+1`` input points are necessary.  If the
+            input is longer than this, it is cropped.  If it is shorter than this,
+            it is padded with zeros.  If `n` is not given, it is taken to be
+            ``2*(m-1)`` where ``m`` is the length of the input along the axis
+            specified by `axis`.
+        axis : int, optional
+            Axis over which to compute the inverse FFT. If not given, the last
+            axis is used.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : ndarray
+            The truncated or zero-padded input, transformed along the axis
+            indicated by `axis`, or the last one if `axis` is not specified.
+            The length of the transformed axis is `n`, or, if `n` is not given,
+            ``2*(m-1)`` where ``m`` is the length of the transformed axis of the
+            input. To get an odd number of output points, `n` must be specified.
+
+        Raises
+        ------
+        IndexError
+            If `axis` is not a valid axis of `a`.
+
+        See Also
+        --------
+        numpy.fft : For definition of the DFT and conventions used.
+        rfft : The one-dimensional FFT of real input, of which `irfft` is inverse.
+        fft : The one-dimensional FFT.
+        irfft2 : The inverse of the two-dimensional FFT of real input.
+        irfftn : The inverse of the *n*-dimensional FFT of real input.
+
+        Notes
+        -----
+        Returns the real valued `n`-point inverse discrete Fourier transform
+        of `a`, where `a` contains the non-negative frequency terms of a
+        Hermitian-symmetric sequence. `n` is the length of the result, not the
+        input.
+
+        If you specify an `n` such that `a` must be zero-padded or truncated, the
+        extra/removed values will be added/removed at high frequencies. One can
+        thus resample a series to `m` points via Fourier interpolation by:
+        ``a_resamp = irfft(rfft(a), m)``.
+
+        The correct interpretation of the hermitian input depends on the length of
+        the original data, as given by `n`. This is because each input shape could
+        correspond to either an odd or even length signal. By default, `irfft`
+        assumes an even output length which puts the last entry at the Nyquist
+        frequency; aliasing with its symmetric counterpart. By Hermitian symmetry,
+        the value is thus treated as purely real. To avoid losing information, the
+        correct length of the real input **must** be given.
+
+        Examples
+        --------
+        >>> np.fft.ifft([1, -1j, -1, 1j])
+        array([0.+0.j,  1.+0.j,  0.+0.j,  0.+0.j]) # may vary
+        >>> np.fft.irfft([1, -1j, -1])
+        array([0.,  1.,  0.,  0.])
+
+        Notice how the last term in the input to the ordinary `ifft` is the
+        complex conjugate of the second term, and the output has zero imaginary
+        part everywhere.  When calling `irfft`, the negative frequencies are not
+        specified, and the output array is purely real.
+
+    irfft2(a, s=None, axes=(-2, -1), norm=None)
+        Computes the inverse of `rfft2`.
+
+        Parameters
+        ----------
+        a : array_like
+            The input array
+        s : sequence of ints, optional
+            Shape of the real output to the inverse FFT.
+        axes : sequence of ints, optional
+            The axes over which to compute the inverse fft.
+            Default is the last two axes.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : ndarray
+            The result of the inverse real 2-D FFT.
+
+        See Also
+        --------
+        rfft2 : The forward two-dimensional FFT of real input,
+                of which `irfft2` is the inverse.
+        rfft : The one-dimensional FFT for real input.
+        irfft : The inverse of the one-dimensional FFT of real input.
+        irfftn : Compute the inverse of the N-dimensional FFT of real input.
+
+        Notes
+        -----
+        This is really `irfftn` with different defaults.
+        For more details see `irfftn`.
+
+        Examples
+        --------
+        >>> a = np.mgrid[:5, :5][0]
+        >>> A = np.fft.rfft2(a)
+        >>> np.fft.irfft2(A, s=a.shape)
+        array([[0., 0., 0., 0., 0.],
+               [1., 1., 1., 1., 1.],
+               [2., 2., 2., 2., 2.],
+               [3., 3., 3., 3., 3.],
+               [4., 4., 4., 4., 4.]])
+
+    irfftn(a, s=None, axes=None, norm=None)
+        Computes the inverse of `rfftn`.
+
+        This function computes the inverse of the N-dimensional discrete
+        Fourier Transform for real input over any number of axes in an
+        M-dimensional array by means of the Fast Fourier Transform (FFT).  In
+        other words, ``irfftn(rfftn(a), a.shape) == a`` to within numerical
+        accuracy. (The ``a.shape`` is necessary like ``len(a)`` is for `irfft`,
+        and for the same reason.)
+
+        The input should be ordered in the same way as is returned by `rfftn`,
+        i.e. as for `irfft` for the final transformation axis, and as for `ifftn`
+        along all the other axes.
+
+        Parameters
+        ----------
+        a : array_like
+            Input array.
+        s : sequence of ints, optional
+            Shape (length of each transformed axis) of the output
+            (``s[0]`` refers to axis 0, ``s[1]`` to axis 1, etc.). `s` is also the
+            number of input points used along this axis, except for the last axis,
+            where ``s[-1]//2+1`` points of the input are used.
+            Along any axis, if the shape indicated by `s` is smaller than that of
+            the input, the input is cropped.  If it is larger, the input is padded
+            with zeros. If `s` is not given, the shape of the input along the axes
+            specified by axes is used. Except for the last axis which is taken to
+            be ``2*(m-1)`` where ``m`` is the length of the input along that axis.
+        axes : sequence of ints, optional
+            Axes over which to compute the inverse FFT. If not given, the last
+            `len(s)` axes are used, or all axes if `s` is also not specified.
+            Repeated indices in `axes` means that the inverse transform over that
+            axis is performed multiple times.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : ndarray
+            The truncated or zero-padded input, transformed along the axes
+            indicated by `axes`, or by a combination of `s` or `a`,
+            as explained in the parameters section above.
+            The length of each transformed axis is as given by the corresponding
+            element of `s`, or the length of the input in every axis except for the
+            last one if `s` is not given.  In the final transformed axis the length
+            of the output when `s` is not given is ``2*(m-1)`` where ``m`` is the
+            length of the final transformed axis of the input.  To get an odd
+            number of output points in the final axis, `s` must be specified.
+
+        Raises
+        ------
+        ValueError
+            If `s` and `axes` have different length.
+        IndexError
+            If an element of `axes` is larger than than the number of axes of `a`.
+
+        See Also
+        --------
+        rfftn : The forward n-dimensional FFT of real input,
+                of which `ifftn` is the inverse.
+        fft : The one-dimensional FFT, with definitions and conventions used.
+        irfft : The inverse of the one-dimensional FFT of real input.
+        irfft2 : The inverse of the two-dimensional FFT of real input.
+
+        Notes
+        -----
+        See `fft` for definitions and conventions used.
+
+        See `rfft` for definitions and conventions used for real input.
+
+        The correct interpretation of the hermitian input depends on the shape of
+        the original data, as given by `s`. This is because each input shape could
+        correspond to either an odd or even length signal. By default, `irfftn`
+        assumes an even output length which puts the last entry at the Nyquist
+        frequency; aliasing with its symmetric counterpart. When performing the
+        final complex to real transform, the last value is thus treated as purely
+        real. To avoid losing information, the correct shape of the real input
+        **must** be given.
+
+        Examples
+        --------
+        >>> a = np.zeros((3, 2, 2))
+        >>> a[0, 0, 0] = 3 * 2 * 2
+        >>> np.fft.irfftn(a)
+        array([[[1.,  1.],
+                [1.,  1.]],
+               [[1.,  1.],
+                [1.,  1.]],
+               [[1.,  1.],
+                [1.,  1.]]])
+
+    rfft(a, n=None, axis=-1, norm=None)
+        Compute the one-dimensional discrete Fourier Transform for real input.
+
+        This function computes the one-dimensional *n*-point discrete Fourier
+        Transform (DFT) of a real-valued array by means of an efficient algorithm
+        called the Fast Fourier Transform (FFT).
+
+        Parameters
+        ----------
+        a : array_like
+            Input array
+        n : int, optional
+            Number of points along transformation axis in the input to use.
+            If `n` is smaller than the length of the input, the input is cropped.
+            If it is larger, the input is padded with zeros. If `n` is not given,
+            the length of the input along the axis specified by `axis` is used.
+        axis : int, optional
+            Axis over which to compute the FFT. If not given, the last axis is
+            used.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : complex ndarray
+            The truncated or zero-padded input, transformed along the axis
+            indicated by `axis`, or the last one if `axis` is not specified.
+            If `n` is even, the length of the transformed axis is ``(n/2)+1``.
+            If `n` is odd, the length is ``(n+1)/2``.
+
+        Raises
+        ------
+        IndexError
+            If `axis` is not a valid axis of `a`.
+
+        See Also
+        --------
+        numpy.fft : For definition of the DFT and conventions used.
+        irfft : The inverse of `rfft`.
+        fft : The one-dimensional FFT of general (complex) input.
+        fftn : The *n*-dimensional FFT.
+        rfftn : The *n*-dimensional FFT of real input.
+
+        Notes
+        -----
+        When the DFT is computed for purely real input, the output is
+        Hermitian-symmetric, i.e. the negative frequency terms are just the complex
+        conjugates of the corresponding positive-frequency terms, and the
+        negative-frequency terms are therefore redundant.  This function does not
+        compute the negative frequency terms, and the length of the transformed
+        axis of the output is therefore ``n//2 + 1``.
+
+        When ``A = rfft(a)`` and fs is the sampling frequency, ``A[0]`` contains
+        the zero-frequency term 0*fs, which is real due to Hermitian symmetry.
+
+        If `n` is even, ``A[-1]`` contains the term representing both positive
+        and negative Nyquist frequency (+fs/2 and -fs/2), and must also be purely
+        real. If `n` is odd, there is no term at fs/2; ``A[-1]`` contains
+        the largest positive frequency (fs/2*(n-1)/n), and is complex in the
+        general case.
+
+        If the input `a` contains an imaginary part, it is silently discarded.
+
+        Examples
+        --------
+        >>> np.fft.fft([0, 1, 0, 0])
+        array([ 1.+0.j,  0.-1.j, -1.+0.j,  0.+1.j]) # may vary
+        >>> np.fft.rfft([0, 1, 0, 0])
+        array([ 1.+0.j,  0.-1.j, -1.+0.j]) # may vary
+
+        Notice how the final element of the `fft` output is the complex conjugate
+        of the second element, for real input. For `rfft`, this symmetry is
+        exploited to compute only the non-negative frequency terms.
+
+    rfft2(a, s=None, axes=(-2, -1), norm=None)
+        Compute the 2-dimensional FFT of a real array.
+
+        Parameters
+        ----------
+        a : array
+            Input array, taken to be real.
+        s : sequence of ints, optional
+            Shape of the FFT.
+        axes : sequence of ints, optional
+            Axes over which to compute the FFT.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : ndarray
+            The result of the real 2-D FFT.
+
+        See Also
+        --------
+        rfftn : Compute the N-dimensional discrete Fourier Transform for real
+                input.
+
+        Notes
+        -----
+        This is really just `rfftn` with different default behavior.
+        For more details see `rfftn`.
+
+        Examples
+        --------
+        >>> a = np.mgrid[:5, :5][0]
+        >>> np.fft.rfft2(a)
+        array([[ 50.  +0.j        ,   0.  +0.j        ,   0.  +0.j        ],
+               [-12.5+17.20477401j,   0.  +0.j        ,   0.  +0.j        ],
+               [-12.5 +4.0614962j ,   0.  +0.j        ,   0.  +0.j        ],
+               [-12.5 -4.0614962j ,   0.  +0.j        ,   0.  +0.j        ],
+               [-12.5-17.20477401j,   0.  +0.j        ,   0.  +0.j        ]])
+
+    rfftfreq(n, d=1.0)
+        Return the Discrete Fourier Transform sample frequencies
+        (for usage with rfft, irfft).
+
+        The returned float array `f` contains the frequency bin centers in cycles
+        per unit of the sample spacing (with zero at the start).  For instance, if
+        the sample spacing is in seconds, then the frequency unit is cycles/second.
+
+        Given a window length `n` and a sample spacing `d`::
+
+          f = [0, 1, ...,     n/2-1,     n/2] / (d*n)   if n is even
+          f = [0, 1, ..., (n-1)/2-1, (n-1)/2] / (d*n)   if n is odd
+
+        Unlike `fftfreq` (but like `scipy.fftpack.rfftfreq`)
+        the Nyquist frequency component is considered to be positive.
+
+        Parameters
+        ----------
+        n : int
+            Window length.
+        d : scalar, optional
+            Sample spacing (inverse of the sampling rate). Defaults to 1.
+
+        Returns
+        -------
+        f : ndarray
+            Array of length ``n//2 + 1`` containing the sample frequencies.
+
+        Examples
+        --------
+        >>> signal = np.array([-2, 8, 6, 4, 1, 0, 3, 5, -3, 4], dtype=float)
+        >>> fourier = np.fft.rfft(signal)
+        >>> n = signal.size
+        >>> sample_rate = 100
+        >>> freq = np.fft.fftfreq(n, d=1./sample_rate)
+        >>> freq
+        array([  0.,  10.,  20., ..., -30., -20., -10.])
+        >>> freq = np.fft.rfftfreq(n, d=1./sample_rate)
+        >>> freq
+        array([  0.,  10.,  20.,  30.,  40.,  50.])
+
+    rfftn(a, s=None, axes=None, norm=None)
+        Compute the N-dimensional discrete Fourier Transform for real input.
+
+        This function computes the N-dimensional discrete Fourier Transform over
+        any number of axes in an M-dimensional real array by means of the Fast
+        Fourier Transform (FFT).  By default, all axes are transformed, with the
+        real transform performed over the last axis, while the remaining
+        transforms are complex.
+
+        Parameters
+        ----------
+        a : array_like
+            Input array, taken to be real.
+        s : sequence of ints, optional
+            Shape (length along each transformed axis) to use from the input.
+            (``s[0]`` refers to axis 0, ``s[1]`` to axis 1, etc.).
+            The final element of `s` corresponds to `n` for ``rfft(x, n)``, while
+            for the remaining axes, it corresponds to `n` for ``fft(x, n)``.
+            Along any axis, if the given shape is smaller than that of the input,
+            the input is cropped.  If it is larger, the input is padded with zeros.
+            if `s` is not given, the shape of the input along the axes specified
+            by `axes` is used.
+        axes : sequence of ints, optional
+            Axes over which to compute the FFT.  If not given, the last ``len(s)``
+            axes are used, or all axes if `s` is also not specified.
+        norm : {"backward", "ortho", "forward"}, optional
+            .. versionadded:: 1.10.0
+
+            Normalization mode (see `numpy.fft`). Default is "backward".
+            Indicates which direction of the forward/backward pair of transforms
+            is scaled and with what normalization factor.
+
+            .. versionadded:: 1.20.0
+
+                The "backward", "forward" values were added.
+
+        Returns
+        -------
+        out : complex ndarray
+            The truncated or zero-padded input, transformed along the axes
+            indicated by `axes`, or by a combination of `s` and `a`,
+            as explained in the parameters section above.
+            The length of the last axis transformed will be ``s[-1]//2+1``,
+            while the remaining transformed axes will have lengths according to
+            `s`, or unchanged from the input.
+
+        Raises
+        ------
+        ValueError
+            If `s` and `axes` have different length.
+        IndexError
+            If an element of `axes` is larger than than the number of axes of `a`.
+
+        See Also
+        --------
+        irfftn : The inverse of `rfftn`, i.e. the inverse of the n-dimensional FFT
+             of real input.
+        fft : The one-dimensional FFT, with definitions and conventions used.
+        rfft : The one-dimensional FFT of real input.
+        fftn : The n-dimensional FFT.
+        rfft2 : The two-dimensional FFT of real input.
+
+        Notes
+        -----
+        The transform for real input is performed over the last transformation
+        axis, as by `rfft`, then the transform over the remaining axes is
+        performed as by `fftn`.  The order of the output is as for `rfft` for the
+        final transformation axis, and as for `fftn` for the remaining
+        transformation axes.
+
+        See `fft` for details, definitions and conventions used.
+
+        Examples
+        --------
+        >>> a = np.ones((2, 2, 2))
+        >>> np.fft.rfftn(a)
+        array([[[8.+0.j,  0.+0.j], # may vary
+                [0.+0.j,  0.+0.j]],
+               [[0.+0.j,  0.+0.j],
+                [0.+0.j,  0.+0.j]]])
+
+        >>> np.fft.rfftn(a, axes=(2, 0))
+        array([[[4.+0.j,  0.+0.j], # may vary
+                [4.+0.j,  0.+0.j]],
+               [[0.+0.j,  0.+0.j],
+                [0.+0.j,  0.+0.j]]])
+
+DATA
+    __all__ = ['fft', 'ifft', 'rfft', 'irfft', 'hfft', 'ihfft', 'rfftn', '...
+
+FILE
+    /home/santosg/miniconda3/lib/python3.12/site-packages/numpy/fft/__init__.py
+
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+flip(m, axis=None)
+    Reverse the order of elements in an array along the given axis.
+
+    The shape of the array is preserved, but the elements are reordered.
+
+    .. versionadded:: 1.12.0
+
+    Parameters
+    ----------
+    m : array_like
+        Input array.
+    axis : None or int or tuple of ints, optional
+         Axis or axes along which to flip over. The default,
+         axis=None, will flip over all of the axes of the input array.
+         If axis is negative it counts from the last to the first axis.
+
+         If axis is a tuple of ints, flipping is performed on all of the axes
+         specified in the tuple.
+
+         .. versionchanged:: 1.15.0
+            None and tuples of axes are supported
+
+    Returns
+    -------
+    out : array_like
+        A view of `m` with the entries of axis reversed.  Since a view is
+        returned, this operation is done in constant time.
+
+    See Also
+    --------
+    flipud : Flip an array vertically (axis=0).
+    fliplr : Flip an array horizontally (axis=1).
+
+    Notes
+    -----
+    flip(m, 0) is equivalent to flipud(m).
+
+    flip(m, 1) is equivalent to fliplr(m).
+
+    flip(m, n) corresponds to ``m[...,::-1,...]`` with ``::-1`` at position n.
+
+    flip(m) corresponds to ``m[::-1,::-1,...,::-1]`` with ``::-1`` at all
+    positions.
+
+    flip(m, (0, 1)) corresponds to ``m[::-1,::-1,...]`` with ``::-1`` at
+    position 0 and position 1.
+
+    Examples
+    --------
+    >>> A = np.arange(8).reshape((2,2,2))
+    >>> A
+    array([[[0, 1],
+            [2, 3]],
+           [[4, 5],
+            [6, 7]]])
+    >>> np.flip(A, 0)
+    array([[[4, 5],
+            [6, 7]],
+           [[0, 1],
+            [2, 3]]])
+    >>> np.flip(A, 1)
+    array([[[2, 3],
+            [0, 1]],
+           [[6, 7],
+            [4, 5]]])
+    >>> np.flip(A)
+    array([[[7, 6],
+            [5, 4]],
+           [[3, 2],
+            [1, 0]]])
+    >>> np.flip(A, (0, 2))
+    array([[[5, 4],
+            [7, 6]],
+           [[1, 0],
+            [3, 2]]])
+    >>> A = np.random.randn(3,4,5)
+    >>> np.all(np.flip(A,2) == A[:,:,::-1,...])
+    True
+
+None
+Help on ufunc:
+
+fmax = <ufunc 'fmax'>
+    fmax(x1, x2, /, out=None, *, where=True, casting='same_kind', order='K', dtype=None, subok=True[, signature, extobj])
+
+    Element-wise maximum of array elements.
+
+    Compare two arrays and return a new array containing the element-wise
+    maxima. If one of the elements being compared is a NaN, then the
+    non-nan element is returned. If both elements are NaNs then the first
+    is returned.  The latter distinction is important for complex NaNs,
+    which are defined as at least one of the real or imaginary parts being
+    a NaN. The net effect is that NaNs are ignored when possible.
+
+    Parameters
+    ----------
+    x1, x2 : array_like
+        The arrays holding the elements to be compared.
+        If ``x1.shape != x2.shape``, they must be broadcastable to a common
+        shape (which becomes the shape of the output).
+    out : ndarray, None, or tuple of ndarray and None, optional
+        A location into which the result is stored. If provided, it must have
+        a shape that the inputs broadcast to. If not provided or None,
+        a freshly-allocated array is returned. A tuple (possible only as a
+        keyword argument) must have length equal to the number of outputs.
+    where : array_like, optional
+        This condition is broadcast over the input. At locations where the
+        condition is True, the `out` array will be set to the ufunc result.
+        Elsewhere, the `out` array will retain its original value.
+        Note that if an uninitialized `out` array is created via the default
+        ``out=None``, locations within it where the condition is False will
+        remain uninitialized.
+    **kwargs
+        For other keyword-only arguments, see the
+        :ref:`ufunc docs <ufuncs.kwargs>`.
+
+    Returns
+    -------
+    y : ndarray or scalar
+        The maximum of `x1` and `x2`, element-wise.
+        This is a scalar if both `x1` and `x2` are scalars.
+
+    See Also
+    --------
+    fmin :
+        Element-wise minimum of two arrays, ignores NaNs.
+    maximum :
+        Element-wise maximum of two arrays, propagates NaNs.
+    amax :
+        The maximum value of an array along a given axis, propagates NaNs.
+    nanmax :
+        The maximum value of an array along a given axis, ignores NaNs.
+
+    minimum, amin, nanmin
+
+    Notes
+    -----
+    .. versionadded:: 1.3.0
+
+    The fmax is equivalent to ``np.where(x1 >= x2, x1, x2)`` when neither
+    x1 nor x2 are NaNs, but it is faster and does proper broadcasting.
+
+    Examples
+    --------
+    >>> np.fmax([2, 3, 4], [1, 5, 2])
+    array([ 2.,  5.,  4.])
+
+    >>> np.fmax(np.eye(2), [0.5, 2])
+    array([[ 1. ,  2. ],
+           [ 0.5,  2. ]])
+
+    >>> np.fmax([np.nan, 0, np.nan],[0, np.nan, np.nan])
+    array([ 0.,  0., nan])
+
+None
+Help on ufunc:
+
+gcd = <ufunc 'gcd'>
+    gcd(x1, x2, /, out=None, *, where=True, casting='same_kind', order='K', dtype=None, subok=True[, signature, extobj])
+
+    Returns the greatest common divisor of ``|x1|`` and ``|x2|``
+
+    Parameters
+    ----------
+    x1, x2 : array_like, int
+        Arrays of values.
+        If ``x1.shape != x2.shape``, they must be broadcastable to a common
+        shape (which becomes the shape of the output).
+
+    Returns
+    -------
+    y : ndarray or scalar
+        The greatest common divisor of the absolute value of the inputs
+        This is a scalar if both `x1` and `x2` are scalars.
+
+    See Also
+    --------
+    lcm : The lowest common multiple
+
+    Examples
+    --------
+    >>> np.gcd(12, 20)
+    4
+    >>> np.gcd.reduce([15, 25, 35])
+    5
+    >>> np.gcd(np.arange(6), 20)
+    array([20,  1,  2,  1,  4,  5])
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+gradient(f, *varargs, axis=None, edge_order=1)
+    Return the gradient of an N-dimensional array.
+
+    The gradient is computed using second order accurate central differences
+    in the interior points and either first or second order accurate one-sides
+    (forward or backwards) differences at the boundaries.
+    The returned gradient hence has the same shape as the input array.
+
+    Parameters
+    ----------
+    f : array_like
+        An N-dimensional array containing samples of a scalar function.
+    varargs : list of scalar or array, optional
+        Spacing between f values. Default unitary spacing for all dimensions.
+        Spacing can be specified using:
+
+        1. single scalar to specify a sample distance for all dimensions.
+        2. N scalars to specify a constant sample distance for each dimension.
+           i.e. `dx`, `dy`, `dz`, ...
+        3. N arrays to specify the coordinates of the values along each
+           dimension of F. The length of the array must match the size of
+           the corresponding dimension
+        4. Any combination of N scalars/arrays with the meaning of 2. and 3.
+
+        If `axis` is given, the number of varargs must equal the number of axes.
+        Default: 1.
+
+    edge_order : {1, 2}, optional
+        Gradient is calculated using N-th order accurate differences
+        at the boundaries. Default: 1.
+
+        .. versionadded:: 1.9.1
+
+    axis : None or int or tuple of ints, optional
+        Gradient is calculated only along the given axis or axes
+        The default (axis = None) is to calculate the gradient for all the axes
+        of the input array. axis may be negative, in which case it counts from
+        the last to the first axis.
+
+        .. versionadded:: 1.11.0
+
+    Returns
+    -------
+    gradient : ndarray or list of ndarray
+        A list of ndarrays (or a single ndarray if there is only one dimension)
+        corresponding to the derivatives of f with respect to each dimension.
+        Each derivative has the same shape as f.
+
+    Examples
+    --------
+    >>> f = np.array([1, 2, 4, 7, 11, 16], dtype=float)
+    >>> np.gradient(f)
+    array([1. , 1.5, 2.5, 3.5, 4.5, 5. ])
+    >>> np.gradient(f, 2)
+    array([0.5 ,  0.75,  1.25,  1.75,  2.25,  2.5 ])
+
+    Spacing can be also specified with an array that represents the coordinates
+    of the values F along the dimensions.
+    For instance a uniform spacing:
+
+    >>> x = np.arange(f.size)
+    >>> np.gradient(f, x)
+    array([1. ,  1.5,  2.5,  3.5,  4.5,  5. ])
+
+    Or a non uniform one:
+
+    >>> x = np.array([0., 1., 1.5, 3.5, 4., 6.], dtype=float)
+    >>> np.gradient(f, x)
+    array([1. ,  3. ,  3.5,  6.7,  6.9,  2.5])
+
+    For two dimensional arrays, the return will be two arrays ordered by
+    axis. In this example the first array stands for the gradient in
+    rows and the second one in columns direction:
+
+    >>> np.gradient(np.array([[1, 2, 6], [3, 4, 5]], dtype=float))
+    [array([[ 2.,  2., -1.],
+           [ 2.,  2., -1.]]), array([[1. , 2.5, 4. ],
+           [1. , 1. , 1. ]])]
+
+    In this example the spacing is also specified:
+    uniform for axis=0 and non uniform for axis=1
+
+    >>> dx = 2.
+    >>> y = [1., 1.5, 3.5]
+    >>> np.gradient(np.array([[1, 2, 6], [3, 4, 5]], dtype=float), dx, y)
+    [array([[ 1. ,  1. , -0.5],
+           [ 1. ,  1. , -0.5]]), array([[2. , 2. , 2. ],
+           [2. , 1.7, 0.5]])]
+
+    It is possible to specify how boundaries are treated using `edge_order`
+
+    >>> x = np.array([0, 1, 2, 3, 4])
+    >>> f = x**2
+    >>> np.gradient(f, edge_order=1)
+    array([1.,  2.,  4.,  6.,  7.])
+    >>> np.gradient(f, edge_order=2)
+    array([0., 2., 4., 6., 8.])
+
+    The `axis` keyword can be used to specify a subset of axes of which the
+    gradient is calculated
+
+    >>> np.gradient(np.array([[1, 2, 6], [3, 4, 5]], dtype=float), axis=0)
+    array([[ 2.,  2., -1.],
+           [ 2.,  2., -1.]])
+
+    Notes
+    -----
+    Assuming that :math:`f\in C^{3}` (i.e., :math:`f` has at least 3 continuous
+    derivatives) and let :math:`h_{*}` be a non-homogeneous stepsize, we
+    minimize the "consistency error" :math:`\eta_{i}` between the true gradient
+    and its estimate from a linear combination of the neighboring grid-points:
+
+    .. math::
+
+        \eta_{i} = f_{i}^{\left(1\right)} -
+                    \left[ \alpha f\left(x_{i}\right) +
+                            \beta f\left(x_{i} + h_{d}\right) +
+                            \gamma f\left(x_{i}-h_{s}\right)
+                    \right]
+
+    By substituting :math:`f(x_{i} + h_{d})` and :math:`f(x_{i} - h_{s})`
+    with their Taylor series expansion, this translates into solving
+    the following the linear system:
+
+    .. math::
+
+        \left\{
+            \begin{array}{r}
+                \alpha+\beta+\gamma=0 \\
+                \beta h_{d}-\gamma h_{s}=1 \\
+                \beta h_{d}^{2}+\gamma h_{s}^{2}=0
+            \end{array}
+        \right.
+
+    The resulting approximation of :math:`f_{i}^{(1)}` is the following:
+
+    .. math::
+
+        \hat f_{i}^{(1)} =
+            \frac{
+                h_{s}^{2}f\left(x_{i} + h_{d}\right)
+                + \left(h_{d}^{2} - h_{s}^{2}\right)f\left(x_{i}\right)
+                - h_{d}^{2}f\left(x_{i}-h_{s}\right)}
+                { h_{s}h_{d}\left(h_{d} + h_{s}\right)}
+            + \mathcal{O}\left(\frac{h_{d}h_{s}^{2}
+                                + h_{s}h_{d}^{2}}{h_{d}
+                                + h_{s}}\right)
+
+    It is worth noting that if :math:`h_{s}=h_{d}`
+    (i.e., data are evenly spaced)
+    we find the standard second order approximation:
+
+    .. math::
+
+        \hat f_{i}^{(1)}=
+            \frac{f\left(x_{i+1}\right) - f\left(x_{i-1}\right)}{2h}
+            + \mathcal{O}\left(h^{2}\right)
+
+    With a similar procedure the forward/backward approximations used for
+    boundaries can be derived.
+
+    References
+    ----------
+    .. [1]  Quarteroni A., Sacco R., Saleri F. (2007) Numerical Mathematics
+            (Texts in Applied Mathematics). New York: Springer.
+    .. [2]  Durran D. R. (1999) Numerical Methods for Wave Equations
+            in Geophysical Fluid Dynamics. New York: Springer.
+    .. [3]  Fornberg B. (1988) Generation of Finite Difference Formulas on
+            Arbitrarily Spaced Grids,
+            Mathematics of Computation 51, no. 184 : 699-706.
+            `PDF <http://www.ams.org/journals/mcom/1988-51-184/
+            S0025-5718-1988-0935077-0/S0025-5718-1988-0935077-0.pdf>`_.
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+histogram(a, bins=10, range=None, density=None, weights=None)
+    Compute the histogram of a dataset.
+
+    Parameters
+    ----------
+    a : array_like
+        Input data. The histogram is computed over the flattened array.
+    bins : int or sequence of scalars or str, optional
+        If `bins` is an int, it defines the number of equal-width
+        bins in the given range (10, by default). If `bins` is a
+        sequence, it defines a monotonically increasing array of bin edges,
+        including the rightmost edge, allowing for non-uniform bin widths.
+
+        .. versionadded:: 1.11.0
+
+        If `bins` is a string, it defines the method used to calculate the
+        optimal bin width, as defined by `histogram_bin_edges`.
+
+    range : (float, float), optional
+        The lower and upper range of the bins.  If not provided, range
+        is simply ``(a.min(), a.max())``.  Values outside the range are
+        ignored. The first element of the range must be less than or
+        equal to the second. `range` affects the automatic bin
+        computation as well. While bin width is computed to be optimal
+        based on the actual data within `range`, the bin count will fill
+        the entire range including portions containing no data.
+    weights : array_like, optional
+        An array of weights, of the same shape as `a`.  Each value in
+        `a` only contributes its associated weight towards the bin count
+        (instead of 1). If `density` is True, the weights are
+        normalized, so that the integral of the density over the range
+        remains 1.
+    density : bool, optional
+        If ``False``, the result will contain the number of samples in
+        each bin. If ``True``, the result is the value of the
+        probability *density* function at the bin, normalized such that
+        the *integral* over the range is 1. Note that the sum of the
+        histogram values will not be equal to 1 unless bins of unity
+        width are chosen; it is not a probability *mass* function.
+
+    Returns
+    -------
+    hist : array
+        The values of the histogram. See `density` and `weights` for a
+        description of the possible semantics.
+    bin_edges : array of dtype float
+        Return the bin edges ``(length(hist)+1)``.
+
+
+    See Also
+    --------
+    histogramdd, bincount, searchsorted, digitize, histogram_bin_edges
+
+    Notes
+    -----
+    All but the last (righthand-most) bin is half-open.  In other words,
+    if `bins` is::
+
+      [1, 2, 3, 4]
+
+    then the first bin is ``[1, 2)`` (including 1, but excluding 2) and
+    the second ``[2, 3)``.  The last bin, however, is ``[3, 4]``, which
+    *includes* 4.
+
+
+    Examples
+    --------
+    >>> np.histogram([1, 2, 1], bins=[0, 1, 2, 3])
+    (array([0, 2, 1]), array([0, 1, 2, 3]))
+    >>> np.histogram(np.arange(4), bins=np.arange(5), density=True)
+    (array([0.25, 0.25, 0.25, 0.25]), array([0, 1, 2, 3, 4]))
+    >>> np.histogram([[1, 2, 1], [1, 0, 1]], bins=[0,1,2,3])
+    (array([1, 4, 1]), array([0, 1, 2, 3]))
+
+    >>> a = np.arange(5)
+    >>> hist, bin_edges = np.histogram(a, density=True)
+    >>> hist
+    array([0.5, 0. , 0.5, 0. , 0. , 0.5, 0. , 0.5, 0. , 0.5])
+    >>> hist.sum()
+    2.4999999999999996
+    >>> np.sum(hist * np.diff(bin_edges))
+    1.0
+
+    .. versionadded:: 1.11.0
+
+    Automated Bin Selection Methods example, using 2 peak random data
+    with 2000 points:
+
+    >>> import matplotlib.pyplot as plt
+    >>> rng = np.random.RandomState(10)  # deterministic random data
+    >>> a = np.hstack((rng.normal(size=1000),
+    ...                rng.normal(loc=5, scale=2, size=1000)))
+    >>> _ = plt.hist(a, bins='auto')  # arguments are passed to np.histogram
+    >>> plt.title("Histogram with 'auto' bins")
+    Text(0.5, 1.0, "Histogram with 'auto' bins")
+    >>> plt.show()
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+hsplit(ary, indices_or_sections)
+    Split an array into multiple sub-arrays horizontally (column-wise).
+
+    Please refer to the `split` documentation.  `hsplit` is equivalent
+    to `split` with ``axis=1``, the array is always split along the second
+    axis except for 1-D arrays, where it is split at ``axis=0``.
+
+    See Also
+    --------
+    split : Split an array into multiple sub-arrays of equal size.
+
+    Examples
+    --------
+    >>> x = np.arange(16.0).reshape(4, 4)
+    >>> x
+    array([[ 0.,   1.,   2.,   3.],
+           [ 4.,   5.,   6.,   7.],
+           [ 8.,   9.,  10.,  11.],
+           [12.,  13.,  14.,  15.]])
+    >>> np.hsplit(x, 2)
+    [array([[  0.,   1.],
+           [  4.,   5.],
+           [  8.,   9.],
+           [12.,  13.]]),
+     array([[  2.,   3.],
+           [  6.,   7.],
+           [10.,  11.],
+           [14.,  15.]])]
+    >>> np.hsplit(x, np.array([3, 6]))
+    [array([[ 0.,   1.,   2.],
+           [ 4.,   5.,   6.],
+           [ 8.,   9.,  10.],
+           [12.,  13.,  14.]]),
+     array([[ 3.],
+           [ 7.],
+           [11.],
+           [15.]]),
+     array([], shape=(4, 0), dtype=float64)]
+
+    With a higher dimensional array the split is still along the second axis.
+
+    >>> x = np.arange(8.0).reshape(2, 2, 2)
+    >>> x
+    array([[[0.,  1.],
+            [2.,  3.]],
+           [[4.,  5.],
+            [6.,  7.]]])
+    >>> np.hsplit(x, 2)
+    [array([[[0.,  1.]],
+           [[4.,  5.]]]),
+     array([[[2.,  3.]],
+           [[6.,  7.]]])]
+
+    With a 1-D array, the split is along axis 0.
+
+    >>> x = np.array([0, 1, 2, 3, 4, 5])
+    >>> np.hsplit(x, 2)
+    [array([0, 1, 2]), array([3, 4, 5])]
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+i0(x)
+    Modified Bessel function of the first kind, order 0.
+
+    Usually denoted :math:`I_0`.
+
+    Parameters
+    ----------
+    x : array_like of float
+        Argument of the Bessel function.
+
+    Returns
+    -------
+    out : ndarray, shape = x.shape, dtype = float
+        The modified Bessel function evaluated at each of the elements of `x`.
+
+    See Also
+    --------
+    scipy.special.i0, scipy.special.iv, scipy.special.ive
+
+    Notes
+    -----
+    The scipy implementation is recommended over this function: it is a
+    proper ufunc written in C, and more than an order of magnitude faster.
+
+    We use the algorithm published by Clenshaw [1]_ and referenced by
+    Abramowitz and Stegun [2]_, for which the function domain is
+    partitioned into the two intervals [0,8] and (8,inf), and Chebyshev
+    polynomial expansions are employed in each interval. Relative error on
+    the domain [0,30] using IEEE arithmetic is documented [3]_ as having a
+    peak of 5.8e-16 with an rms of 1.4e-16 (n = 30000).
+
+    References
+    ----------
+    .. [1] C. W. Clenshaw, "Chebyshev series for mathematical functions", in
+           *National Physical Laboratory Mathematical Tables*, vol. 5, London:
+           Her Majesty's Stationery Office, 1962.
+    .. [2] M. Abramowitz and I. A. Stegun, *Handbook of Mathematical
+           Functions*, 10th printing, New York: Dover, 1964, pp. 379.
+           https://personal.math.ubc.ca/~cbm/aands/page_379.htm
+    .. [3] https://metacpan.org/pod/distribution/Math-Cephes/lib/Math/Cephes.pod#i0:-Modified-Bessel-function-of-order-zero
+
+    Examples
+    --------
+    >>> np.i0(0.)
+    array(1.0)
+    >>> np.i0([0, 1, 2, 3])
+    array([1.        , 1.26606588, 2.2795853 , 4.88079259])
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+imag(val)
+    Return the imaginary part of the complex argument.
+
+    Parameters
+    ----------
+    val : array_like
+        Input array.
+
+    Returns
+    -------
+    out : ndarray or scalar
+        The imaginary component of the complex argument. If `val` is real,
+        the type of `val` is used for the output.  If `val` has complex
+        elements, the returned type is float.
+
+    See Also
+    --------
+    real, angle, real_if_close
+
+    Examples
+    --------
+    >>> a = np.array([1+2j, 3+4j, 5+6j])
+    >>> a.imag
+    array([2.,  4.,  6.])
+    >>> a.imag = np.array([8, 10, 12])
+    >>> a
+    array([1. +8.j,  3.+10.j,  5.+12.j])
+    >>> np.imag(1 + 1j)
+    1.0
+
+None
+Help on function indices in module numpy:
+
+indices(dimensions, dtype=<class 'int'>, sparse=False)
+    Return an array representing the indices of a grid.
+
+    Compute an array where the subarrays contain index values 0, 1, ...
+    varying only along the corresponding axis.
+
+    Parameters
+    ----------
+    dimensions : sequence of ints
+        The shape of the grid.
+    dtype : dtype, optional
+        Data type of the result.
+    sparse : boolean, optional
+        Return a sparse representation of the grid instead of a dense
+        representation. Default is False.
+
+        .. versionadded:: 1.17
+
+    Returns
+    -------
+    grid : one ndarray or tuple of ndarrays
+        If sparse is False:
+            Returns one array of grid indices,
+            ``grid.shape = (len(dimensions),) + tuple(dimensions)``.
+        If sparse is True:
+            Returns a tuple of arrays, with
+            ``grid[i].shape = (1, ..., 1, dimensions[i], 1, ..., 1)`` with
+            dimensions[i] in the ith place
+
+    See Also
+    --------
+    mgrid, ogrid, meshgrid
+
+    Notes
+    -----
+    The output shape in the dense case is obtained by prepending the number
+    of dimensions in front of the tuple of dimensions, i.e. if `dimensions`
+    is a tuple ``(r0, ..., rN-1)`` of length ``N``, the output shape is
+    ``(N, r0, ..., rN-1)``.
+
+    The subarrays ``grid[k]`` contains the N-D array of indices along the
+    ``k-th`` axis. Explicitly::
+
+        grid[k, i0, i1, ..., iN-1] = ik
+
+    Examples
+    --------
+    >>> grid = np.indices((2, 3))
+    >>> grid.shape
+    (2, 2, 3)
+    >>> grid[0]        # row indices
+    array([[0, 0, 0],
+           [1, 1, 1]])
+    >>> grid[1]        # column indices
+    array([[0, 1, 2],
+           [0, 1, 2]])
+
+    The indices can be used as an index into an array.
+
+    >>> x = np.arange(20).reshape(5, 4)
+    >>> row, col = np.indices((2, 3))
+    >>> x[row, col]
+    array([[0, 1, 2],
+           [4, 5, 6]])
+
+    Note that it would be more straightforward in the above example to
+    extract the required elements directly with ``x[:2, :3]``.
+
+    If sparse is set to true, the grid will be returned in a sparse
+    representation.
+
+    >>> i, j = np.indices((2, 3), sparse=True)
+    >>> i.shape
+    (2, 1)
+    >>> j.shape
+    (1, 3)
+    >>> i        # row indices
+    array([[0],
+           [1]])
+    >>> j        # column indices
+    array([[0, 1, 2]])
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+isin(element, test_elements, assume_unique=False, invert=False, *, kind=None)
+    Calculates ``element in test_elements``, broadcasting over `element` only.
+    Returns a boolean array of the same shape as `element` that is True
+    where an element of `element` is in `test_elements` and False otherwise.
+
+    Parameters
+    ----------
+    element : array_like
+        Input array.
+    test_elements : array_like
+        The values against which to test each value of `element`.
+        This argument is flattened if it is an array or array_like.
+        See notes for behavior with non-array-like parameters.
+    assume_unique : bool, optional
+        If True, the input arrays are both assumed to be unique, which
+        can speed up the calculation.  Default is False.
+    invert : bool, optional
+        If True, the values in the returned array are inverted, as if
+        calculating `element not in test_elements`. Default is False.
+        ``np.isin(a, b, invert=True)`` is equivalent to (but faster
+        than) ``np.invert(np.isin(a, b))``.
+    kind : {None, 'sort', 'table'}, optional
+        The algorithm to use. This will not affect the final result,
+        but will affect the speed and memory use. The default, None,
+        will select automatically based on memory considerations.
+
+        * If 'sort', will use a mergesort-based approach. This will have
+          a memory usage of roughly 6 times the sum of the sizes of
+          `ar1` and `ar2`, not accounting for size of dtypes.
+        * If 'table', will use a lookup table approach similar
+          to a counting sort. This is only available for boolean and
+          integer arrays. This will have a memory usage of the
+          size of `ar1` plus the max-min value of `ar2`. `assume_unique`
+          has no effect when the 'table' option is used.
+        * If None, will automatically choose 'table' if
+          the required memory allocation is less than or equal to
+          6 times the sum of the sizes of `ar1` and `ar2`,
+          otherwise will use 'sort'. This is done to not use
+          a large amount of memory by default, even though
+          'table' may be faster in most cases. If 'table' is chosen,
+          `assume_unique` will have no effect.
+
+
+    Returns
+    -------
+    isin : ndarray, bool
+        Has the same shape as `element`. The values `element[isin]`
+        are in `test_elements`.
+
+    See Also
+    --------
+    in1d                  : Flattened version of this function.
+    numpy.lib.arraysetops : Module with a number of other functions for
+                            performing set operations on arrays.
+
+    Notes
+    -----
+
+    `isin` is an element-wise function version of the python keyword `in`.
+    ``isin(a, b)`` is roughly equivalent to
+    ``np.array([item in b for item in a])`` if `a` and `b` are 1-D sequences.
+
+    `element` and `test_elements` are converted to arrays if they are not
+    already. If `test_elements` is a set (or other non-sequence collection)
+    it will be converted to an object array with one element, rather than an
+    array of the values contained in `test_elements`. This is a consequence
+    of the `array` constructor's way of handling non-sequence collections.
+    Converting the set to a list usually gives the desired behavior.
+
+    Using ``kind='table'`` tends to be faster than `kind='sort'` if the
+    following relationship is true:
+    ``log10(len(ar2)) > (log10(max(ar2)-min(ar2)) - 2.27) / 0.927``,
+    but may use greater memory. The default value for `kind` will
+    be automatically selected based only on memory usage, so one may
+    manually set ``kind='table'`` if memory constraints can be relaxed.
+
+    .. versionadded:: 1.13.0
+
+    Examples
+    --------
+    >>> element = 2*np.arange(4).reshape((2, 2))
+    >>> element
+    array([[0, 2],
+           [4, 6]])
+    >>> test_elements = [1, 2, 4, 8]
+    >>> mask = np.isin(element, test_elements)
+    >>> mask
+    array([[False,  True],
+           [ True, False]])
+    >>> element[mask]
+    array([2, 4])
+
+    The indices of the matched values can be obtained with `nonzero`:
+
+    >>> np.nonzero(mask)
+    (array([0, 1]), array([1, 0]))
+
+    The test can also be inverted:
+
+    >>> mask = np.isin(element, test_elements, invert=True)
+    >>> mask
+    array([[ True, False],
+           [False,  True]])
+    >>> element[mask]
+    array([0, 6])
+
+    Because of how `array` handles sets, the following does not
+    work as expected:
+
+    >>> test_set = {1, 2, 4, 8}
+    >>> np.isin(element, test_set)
+    array([[False, False],
+           [False, False]])
+
+    Casting the set to a list gives the expected result:
+
+    >>> np.isin(element, list(test_set))
+    array([[False,  True],
+           [ True, False]])
+
+None
+Help on function iterable in module numpy:
+
+iterable(y)
+    Check whether or not an object can be iterated over.
+
+    Parameters
+    ----------
+    y : object
+      Input object.
+
+    Returns
+    -------
+    b : bool
+      Return ``True`` if the object has an iterator method or is a
+      sequence and ``False`` otherwise.
+
+
+    Examples
+    --------
+    >>> np.iterable([1, 2, 3])
+    True
+    >>> np.iterable(2)
+    False
+
+    Notes
+    -----
+    In most cases, the results of ``np.iterable(obj)`` are consistent with
+    ``isinstance(obj, collections.abc.Iterable)``. One notable exception is
+    the treatment of 0-dimensional arrays::
+
+        >>> from collections.abc import Iterable
+        >>> a = np.array(1.0)  # 0-dimensional numpy array
+        >>> isinstance(a, Iterable)
+        True
+        >>> np.iterable(a)
+        False
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+ix_(*args)
+    Construct an open mesh from multiple sequences.
+
+    This function takes N 1-D sequences and returns N outputs with N
+    dimensions each, such that the shape is 1 in all but one dimension
+    and the dimension with the non-unit shape value cycles through all
+    N dimensions.
+
+    Using `ix_` one can quickly construct index arrays that will index
+    the cross product. ``a[np.ix_([1,3],[2,5])]`` returns the array
+    ``[[a[1,2] a[1,5]], [a[3,2] a[3,5]]]``.
+
+    Parameters
+    ----------
+    args : 1-D sequences
+        Each sequence should be of integer or boolean type.
+        Boolean sequences will be interpreted as boolean masks for the
+        corresponding dimension (equivalent to passing in
+        ``np.nonzero(boolean_sequence)``).
+
+    Returns
+    -------
+    out : tuple of ndarrays
+        N arrays with N dimensions each, with N the number of input
+        sequences. Together these arrays form an open mesh.
+
+    See Also
+    --------
+    ogrid, mgrid, meshgrid
+
+    Examples
+    --------
+    >>> a = np.arange(10).reshape(2, 5)
+    >>> a
+    array([[0, 1, 2, 3, 4],
+           [5, 6, 7, 8, 9]])
+    >>> ixgrid = np.ix_([0, 1], [2, 4])
+    >>> ixgrid
+    (array([[0],
+           [1]]), array([[2, 4]]))
+    >>> ixgrid[0].shape, ixgrid[1].shape
+    ((2, 1), (1, 2))
+    >>> a[ixgrid]
+    array([[2, 4],
+           [7, 9]])
+
+    >>> ixgrid = np.ix_([True, True], [2, 4])
+    >>> a[ixgrid]
+    array([[2, 4],
+           [7, 9]])
+    >>> ixgrid = np.ix_([True, True], [False, False, True, False, True])
+    >>> a[ixgrid]
+    array([[2, 4],
+           [7, 9]])
+
+None
+Help on ufunc:
+
+lcm = <ufunc 'lcm'>
+    lcm(x1, x2, /, out=None, *, where=True, casting='same_kind', order='K', dtype=None, subok=True[, signature, extobj])
+
+    Returns the lowest common multiple of ``|x1|`` and ``|x2|``
+
+    Parameters
+    ----------
+    x1, x2 : array_like, int
+        Arrays of values.
+        If ``x1.shape != x2.shape``, they must be broadcastable to a common
+        shape (which becomes the shape of the output).
+
+    Returns
+    -------
+    y : ndarray or scalar
+        The lowest common multiple of the absolute value of the inputs
+        This is a scalar if both `x1` and `x2` are scalars.
+
+    See Also
+    --------
+    gcd : The greatest common divisor
+
+    Examples
+    --------
+    >>> np.lcm(12, 20)
+    60
+    >>> np.lcm.reduce([3, 12, 20])
+    60
+    >>> np.lcm.reduce([40, 12, 20])
+    120
+    >>> np.lcm(np.arange(6), 20)
+    array([ 0, 20, 20, 60, 20, 20])
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+linspace(start, stop, num=50, endpoint=True, retstep=False, dtype=None, axis=0)
+    Return evenly spaced numbers over a specified interval.
+
+    Returns `num` evenly spaced samples, calculated over the
+    interval [`start`, `stop`].
+
+    The endpoint of the interval can optionally be excluded.
+
+    .. versionchanged:: 1.16.0
+        Non-scalar `start` and `stop` are now supported.
+
+    .. versionchanged:: 1.20.0
+        Values are rounded towards ``-inf`` instead of ``0`` when an
+        integer ``dtype`` is specified. The old behavior can
+        still be obtained with ``np.linspace(start, stop, num).astype(int)``
+
+    Parameters
+    ----------
+    start : array_like
+        The starting value of the sequence.
+    stop : array_like
+        The end value of the sequence, unless `endpoint` is set to False.
+        In that case, the sequence consists of all but the last of ``num + 1``
+        evenly spaced samples, so that `stop` is excluded.  Note that the step
+        size changes when `endpoint` is False.
+    num : int, optional
+        Number of samples to generate. Default is 50. Must be non-negative.
+    endpoint : bool, optional
+        If True, `stop` is the last sample. Otherwise, it is not included.
+        Default is True.
+    retstep : bool, optional
+        If True, return (`samples`, `step`), where `step` is the spacing
+        between samples.
+    dtype : dtype, optional
+        The type of the output array.  If `dtype` is not given, the data type
+        is inferred from `start` and `stop`. The inferred dtype will never be
+        an integer; `float` is chosen even if the arguments would produce an
+        array of integers.
+
+        .. versionadded:: 1.9.0
+
+    axis : int, optional
+        The axis in the result to store the samples.  Relevant only if start
+        or stop are array-like.  By default (0), the samples will be along a
+        new axis inserted at the beginning. Use -1 to get an axis at the end.
+
+        .. versionadded:: 1.16.0
+
+    Returns
+    -------
+    samples : ndarray
+        There are `num` equally spaced samples in the closed interval
+        ``[start, stop]`` or the half-open interval ``[start, stop)``
+        (depending on whether `endpoint` is True or False).
+    step : float, optional
+        Only returned if `retstep` is True
+
+        Size of spacing between samples.
+
+
+    See Also
+    --------
+    arange : Similar to `linspace`, but uses a step size (instead of the
+             number of samples).
+    geomspace : Similar to `linspace`, but with numbers spaced evenly on a log
+                scale (a geometric progression).
+    logspace : Similar to `geomspace`, but with the end points specified as
+               logarithms.
+    :ref:`how-to-partition`
+
+    Examples
+    --------
+    >>> np.linspace(2.0, 3.0, num=5)
+    array([2.  , 2.25, 2.5 , 2.75, 3.  ])
+    >>> np.linspace(2.0, 3.0, num=5, endpoint=False)
+    array([2. ,  2.2,  2.4,  2.6,  2.8])
+    >>> np.linspace(2.0, 3.0, num=5, retstep=True)
+    (array([2.  ,  2.25,  2.5 ,  2.75,  3.  ]), 0.25)
+
+    Graphical illustration:
+
+    >>> import matplotlib.pyplot as plt
+    >>> N = 8
+    >>> y = np.zeros(N)
+    >>> x1 = np.linspace(0, 10, N, endpoint=True)
+    >>> x2 = np.linspace(0, 10, N, endpoint=False)
+    >>> plt.plot(x1, y, 'o')
+    [<matplotlib.lines.Line2D object at 0x...>]
+    >>> plt.plot(x2, y + 0.5, 'o')
+    [<matplotlib.lines.Line2D object at 0x...>]
+    >>> plt.ylim([-0.5, 1])
+    (-0.5, 1)
+    >>> plt.show()
+
+None
+Help on function load in module numpy:
+
+load(file, mmap_mode=None, allow_pickle=False, fix_imports=True, encoding='ASCII', *, max_header_size=10000)
+    Load arrays or pickled objects from ``.npy``, ``.npz`` or pickled files.
+
+    .. warning:: Loading files that contain object arrays uses the ``pickle``
+                 module, which is not secure against erroneous or maliciously
+                 constructed data. Consider passing ``allow_pickle=False`` to
+                 load data that is known not to contain object arrays for the
+                 safer handling of untrusted sources.
+
+    Parameters
+    ----------
+    file : file-like object, string, or pathlib.Path
+        The file to read. File-like objects must support the
+        ``seek()`` and ``read()`` methods and must always
+        be opened in binary mode.  Pickled files require that the
+        file-like object support the ``readline()`` method as well.
+    mmap_mode : {None, 'r+', 'r', 'w+', 'c'}, optional
+        If not None, then memory-map the file, using the given mode (see
+        `numpy.memmap` for a detailed description of the modes).  A
+        memory-mapped array is kept on disk. However, it can be accessed
+        and sliced like any ndarray.  Memory mapping is especially useful
+        for accessing small fragments of large files without reading the
+        entire file into memory.
+    allow_pickle : bool, optional
+        Allow loading pickled object arrays stored in npy files. Reasons for
+        disallowing pickles include security, as loading pickled data can
+        execute arbitrary code. If pickles are disallowed, loading object
+        arrays will fail. Default: False
+
+        .. versionchanged:: 1.16.3
+            Made default False in response to CVE-2019-6446.
+
+    fix_imports : bool, optional
+        Only useful when loading Python 2 generated pickled files on Python 3,
+        which includes npy/npz files containing object arrays. If `fix_imports`
+        is True, pickle will try to map the old Python 2 names to the new names
+        used in Python 3.
+    encoding : str, optional
+        What encoding to use when reading Python 2 strings. Only useful when
+        loading Python 2 generated pickled files in Python 3, which includes
+        npy/npz files containing object arrays. Values other than 'latin1',
+        'ASCII', and 'bytes' are not allowed, as they can corrupt numerical
+        data. Default: 'ASCII'
+    max_header_size : int, optional
+        Maximum allowed size of the header.  Large headers may not be safe
+        to load securely and thus require explicitly passing a larger value.
+        See :py:func:`ast.literal_eval()` for details.
+        This option is ignored when `allow_pickle` is passed.  In that case
+        the file is by definition trusted and the limit is unnecessary.
+
+    Returns
+    -------
+    result : array, tuple, dict, etc.
+        Data stored in the file. For ``.npz`` files, the returned instance
+        of NpzFile class must be closed to avoid leaking file descriptors.
+
+    Raises
+    ------
+    OSError
+        If the input file does not exist or cannot be read.
+    UnpicklingError
+        If ``allow_pickle=True``, but the file cannot be loaded as a pickle.
+    ValueError
+        The file contains an object array, but ``allow_pickle=False`` given.
+    EOFError
+        When calling ``np.load`` multiple times on the same file handle,
+        if all data has already been read
+
+    See Also
+    --------
+    save, savez, savez_compressed, loadtxt
+    memmap : Create a memory-map to an array stored in a file on disk.
+    lib.format.open_memmap : Create or load a memory-mapped ``.npy`` file.
+
+    Notes
+    -----
+    - If the file contains pickle data, then whatever object is stored
+      in the pickle is returned.
+    - If the file is a ``.npy`` file, then a single array is returned.
+    - If the file is a ``.npz`` file, then a dictionary-like object is
+      returned, containing ``{filename: array}`` key-value pairs, one for
+      each file in the archive.
+    - If the file is a ``.npz`` file, the returned value supports the
+      context manager protocol in a similar fashion to the open function::
+
+        with load('foo.npz') as data:
+            a = data['a']
+
+      The underlying file descriptor is closed when exiting the 'with'
+      block.
+
+    Examples
+    --------
+    Store data to disk, and load it again:
+
+    >>> np.save('/tmp/123', np.array([[1, 2, 3], [4, 5, 6]]))
+    >>> np.load('/tmp/123.npy')
+    array([[1, 2, 3],
+           [4, 5, 6]])
+
+    Store compressed data to disk, and load it again:
+
+    >>> a=np.array([[1, 2, 3], [4, 5, 6]])
+    >>> b=np.array([1, 2])
+    >>> np.savez('/tmp/123.npz', a=a, b=b)
+    >>> data = np.load('/tmp/123.npz')
+    >>> data['a']
+    array([[1, 2, 3],
+           [4, 5, 6]])
+    >>> data['b']
+    array([1, 2])
+    >>> data.close()
+
+    Mem-map the stored array, and then access the second row
+    directly from disk:
+
+    >>> X = np.load('/tmp/123.npy', mmap_mode='r')
+    >>> X[1, :]
+    memmap([4, 5, 6])
+
+None
+Help on ufunc:
+
+log10 = <ufunc 'log10'>
+    log10(x, /, out=None, *, where=True, casting='same_kind', order='K', dtype=None, subok=True[, signature, extobj])
+
+    Return the base 10 logarithm of the input array, element-wise.
+
+    Parameters
+    ----------
+    x : array_like
+        Input values.
+    out : ndarray, None, or tuple of ndarray and None, optional
+        A location into which the result is stored. If provided, it must have
+        a shape that the inputs broadcast to. If not provided or None,
+        a freshly-allocated array is returned. A tuple (possible only as a
+        keyword argument) must have length equal to the number of outputs.
+    where : array_like, optional
+        This condition is broadcast over the input. At locations where the
+        condition is True, the `out` array will be set to the ufunc result.
+        Elsewhere, the `out` array will retain its original value.
+        Note that if an uninitialized `out` array is created via the default
+        ``out=None``, locations within it where the condition is False will
+        remain uninitialized.
+    **kwargs
+        For other keyword-only arguments, see the
+        :ref:`ufunc docs <ufuncs.kwargs>`.
+
+    Returns
+    -------
+    y : ndarray
+        The logarithm to the base 10 of `x`, element-wise. NaNs are
+        returned where x is negative.
+        This is a scalar if `x` is a scalar.
+
+    See Also
+    --------
+    emath.log10
+
+    Notes
+    -----
+    Logarithm is a multivalued function: for each `x` there is an infinite
+    number of `z` such that `10**z = x`. The convention is to return the
+    `z` whose imaginary part lies in `(-pi, pi]`.
+
+    For real-valued input data types, `log10` always returns real output.
+    For each value that cannot be expressed as a real number or infinity,
+    it yields ``nan`` and sets the `invalid` floating point error flag.
+
+    For complex-valued input, `log10` is a complex analytical function that
+    has a branch cut `[-inf, 0]` and is continuous from above on it.
+    `log10` handles the floating-point negative zero as an infinitesimal
+    negative number, conforming to the C99 standard.
+
+    In the cases where the input has a negative real part and a very small
+    negative complex part (approaching 0), the result is so close to `-pi`
+    that it evaluates to exactly `-pi`.
+
+    References
+    ----------
+    .. [1] M. Abramowitz and I.A. Stegun, "Handbook of Mathematical Functions",
+           10th printing, 1964, pp. 67.
+           https://personal.math.ubc.ca/~cbm/aands/page_67.htm
+    .. [2] Wikipedia, "Logarithm". https://en.wikipedia.org/wiki/Logarithm
+
+    Examples
+    --------
+    >>> np.log10([1e-15, -3.])
+    array([-15.,  nan])
+
+None

@@ -1,0 +1,1395 @@
+14
+Help on _ArrayFunctionDispatcher in module numpy:
+
+roots(p)
+    Return the roots of a polynomial with coefficients given in p.
+
+    .. note::
+       This forms part of the old polynomial API. Since version 1.4, the
+       new polynomial API defined in `numpy.polynomial` is preferred.
+       A summary of the differences can be found in the
+       :doc:`transition guide </reference/routines.polynomials>`.
+
+    The values in the rank-1 array `p` are coefficients of a polynomial.
+    If the length of `p` is n+1 then the polynomial is described by::
+
+      p[0] * x**n + p[1] * x**(n-1) + ... + p[n-1]*x + p[n]
+
+    Parameters
+    ----------
+    p : array_like
+        Rank-1 array of polynomial coefficients.
+
+    Returns
+    -------
+    out : ndarray
+        An array containing the roots of the polynomial.
+
+    Raises
+    ------
+    ValueError
+        When `p` cannot be converted to a rank-1 array.
+
+    See also
+    --------
+    poly : Find the coefficients of a polynomial with a given sequence
+           of roots.
+    polyval : Compute polynomial values.
+    polyfit : Least squares polynomial fit.
+    poly1d : A one-dimensional polynomial class.
+
+    Notes
+    -----
+    The algorithm relies on computing the eigenvalues of the
+    companion matrix [1]_.
+
+    References
+    ----------
+    .. [1] R. A. Horn & C. R. Johnson, *Matrix Analysis*.  Cambridge, UK:
+        Cambridge University Press, 1999, pp. 146-7.
+
+    Examples
+    --------
+    >>> coeff = [3.2, 2, 1]
+    >>> np.roots(coeff)
+    array([-0.3125+0.46351241j, -0.3125-0.46351241j])
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+save(file, arr, allow_pickle=True, fix_imports=True)
+    Save an array to a binary file in NumPy ``.npy`` format.
+
+    Parameters
+    ----------
+    file : file, str, or pathlib.Path
+        File or filename to which the data is saved.  If file is a file-object,
+        then the filename is unchanged.  If file is a string or Path, a ``.npy``
+        extension will be appended to the filename if it does not already
+        have one.
+    arr : array_like
+        Array data to be saved.
+    allow_pickle : bool, optional
+        Allow saving object arrays using Python pickles. Reasons for disallowing
+        pickles include security (loading pickled data can execute arbitrary
+        code) and portability (pickled objects may not be loadable on different
+        Python installations, for example if the stored objects require libraries
+        that are not available, and not all pickled data is compatible between
+        Python 2 and Python 3).
+        Default: True
+    fix_imports : bool, optional
+        Only useful in forcing objects in object arrays on Python 3 to be
+        pickled in a Python 2 compatible way. If `fix_imports` is True, pickle
+        will try to map the new Python 3 names to the old module names used in
+        Python 2, so that the pickle data stream is readable with Python 2.
+
+    See Also
+    --------
+    savez : Save several arrays into a ``.npz`` archive
+    savetxt, load
+
+    Notes
+    -----
+    For a description of the ``.npy`` format, see :py:mod:`numpy.lib.format`.
+
+    Any data saved to the file is appended to the end of the file.
+
+    Examples
+    --------
+    >>> from tempfile import TemporaryFile
+    >>> outfile = TemporaryFile()
+
+    >>> x = np.arange(10)
+    >>> np.save(outfile, x)
+
+    >>> _ = outfile.seek(0) # Only needed here to simulate closing & reopening file
+    >>> np.load(outfile)
+    array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+
+    >>> with open('test.npy', 'wb') as f:
+    ...     np.save(f, np.array([1, 2]))
+    ...     np.save(f, np.array([1, 3]))
+    >>> with open('test.npy', 'rb') as f:
+    ...     a = np.load(f)
+    ...     b = np.load(f)
+    >>> print(a, b)
+    # [1 2] [1 3]
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+select(condlist, choicelist, default=0)
+    Return an array drawn from elements in choicelist, depending on conditions.
+
+    Parameters
+    ----------
+    condlist : list of bool ndarrays
+        The list of conditions which determine from which array in `choicelist`
+        the output elements are taken. When multiple conditions are satisfied,
+        the first one encountered in `condlist` is used.
+    choicelist : list of ndarrays
+        The list of arrays from which the output elements are taken. It has
+        to be of the same length as `condlist`.
+    default : scalar, optional
+        The element inserted in `output` when all conditions evaluate to False.
+
+    Returns
+    -------
+    output : ndarray
+        The output at position m is the m-th element of the array in
+        `choicelist` where the m-th element of the corresponding array in
+        `condlist` is True.
+
+    See Also
+    --------
+    where : Return elements from one of two arrays depending on condition.
+    take, choose, compress, diag, diagonal
+
+    Examples
+    --------
+    >>> x = np.arange(6)
+    >>> condlist = [x<3, x>3]
+    >>> choicelist = [x, x**2]
+    >>> np.select(condlist, choicelist, 42)
+    array([ 0,  1,  2, 42, 16, 25])
+
+    >>> condlist = [x<=4, x>3]
+    >>> choicelist = [x, x**2]
+    >>> np.select(condlist, choicelist, 55)
+    array([ 0,  1,  2,  3,  4, 25])
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+shape(a)
+    Return the shape of an array.
+
+    Parameters
+    ----------
+    a : array_like
+        Input array.
+
+    Returns
+    -------
+    shape : tuple of ints
+        The elements of the shape tuple give the lengths of the
+        corresponding array dimensions.
+
+    See Also
+    --------
+    len : ``len(a)`` is equivalent to ``np.shape(a)[0]`` for N-D arrays with
+          ``N>=1``.
+    ndarray.shape : Equivalent array method.
+
+    Examples
+    --------
+    >>> np.shape(np.eye(3))
+    (3, 3)
+    >>> np.shape([[1, 3]])
+    (1, 2)
+    >>> np.shape([0])
+    (1,)
+    >>> np.shape(0)
+    ()
+
+    >>> a = np.array([(1, 2), (3, 4), (5, 6)],
+    ...              dtype=[('x', 'i4'), ('y', 'i4')])
+    >>> np.shape(a)
+    (3,)
+    >>> a.shape
+    (3,)
+
+None
+Help on class float32 in module numpy:
+
+class float32(floating)
+ |  Single-precision floating-point number type, compatible with C ``float``.
+ |
+ |  :Character code: ``'f'``
+ |  :Canonical name: `numpy.single`
+ |  :Alias on this platform (Linux x86_64): `numpy.float32`: 32-bit-precision floating-point number type: sign bit, 8 bits exponent, 23 bits mantissa.
+ |
+ |  Method resolution order:
+ |      float32
+ |      floating
+ |      inexact
+ |      number
+ |      generic
+ |      builtins.object
+ |
+ |  Methods defined here:
+ |
+ |  __abs__(self, /)
+ |      abs(self)
+ |
+ |  __add__(self, value, /)
+ |      Return self+value.
+ |
+ |  __bool__(self, /)
+ |      True if self else False
+ |
+ |  __buffer__(self, flags, /)
+ |      Return a buffer object that exposes the underlying memory of the object.
+ |
+ |  __divmod__(self, value, /)
+ |      Return divmod(self, value).
+ |
+ |  __eq__(self, value, /)
+ |      Return self==value.
+ |
+ |  __float__(self, /)
+ |      float(self)
+ |
+ |  __floordiv__(self, value, /)
+ |      Return self//value.
+ |
+ |  __ge__(self, value, /)
+ |      Return self>=value.
+ |
+ |  __gt__(self, value, /)
+ |      Return self>value.
+ |
+ |  __hash__(self, /)
+ |      Return hash(self).
+ |
+ |  __int__(self, /)
+ |      int(self)
+ |
+ |  __le__(self, value, /)
+ |      Return self<=value.
+ |
+ |  __lt__(self, value, /)
+ |      Return self<value.
+ |
+ |  __mod__(self, value, /)
+ |      Return self%value.
+ |
+ |  __mul__(self, value, /)
+ |      Return self*value.
+ |
+ |  __ne__(self, value, /)
+ |      Return self!=value.
+ |
+ |  __neg__(self, /)
+ |      -self
+ |
+ |  __pos__(self, /)
+ |      +self
+ |
+ |  __pow__(self, value, mod=None, /)
+ |      Return pow(self, value, mod).
+ |
+ |  __radd__(self, value, /)
+ |      Return value+self.
+ |
+ |  __rdivmod__(self, value, /)
+ |      Return divmod(value, self).
+ |
+ |  __repr__(self, /)
+ |      Return repr(self).
+ |
+ |  __rfloordiv__(self, value, /)
+ |      Return value//self.
+ |
+ |  __rmod__(self, value, /)
+ |      Return value%self.
+ |
+ |  __rmul__(self, value, /)
+ |      Return value*self.
+ |
+ |  __rpow__(self, value, mod=None, /)
+ |      Return pow(value, self, mod).
+ |
+ |  __rsub__(self, value, /)
+ |      Return value-self.
+ |
+ |  __rtruediv__(self, value, /)
+ |      Return value/self.
+ |
+ |  __str__(self, /)
+ |      Return str(self).
+ |
+ |  __sub__(self, value, /)
+ |      Return self-value.
+ |
+ |  __truediv__(self, value, /)
+ |      Return self/value.
+ |
+ |  as_integer_ratio(...)
+ |      single.as_integer_ratio() -> (int, int)
+ |
+ |      Return a pair of integers, whose ratio is exactly equal to the original
+ |      floating point number, and with a positive denominator.
+ |      Raise `OverflowError` on infinities and a `ValueError` on NaNs.
+ |
+ |      >>> np.single(10.0).as_integer_ratio()
+ |      (10, 1)
+ |      >>> np.single(0.0).as_integer_ratio()
+ |      (0, 1)
+ |      >>> np.single(-.25).as_integer_ratio()
+ |      (-1, 4)
+ |
+ |  is_integer(...)
+ |      single.is_integer() -> bool
+ |
+ |      Return ``True`` if the floating point number is finite with integral
+ |      value, and ``False`` otherwise.
+ |
+ |      .. versionadded:: 1.22
+ |
+ |      Examples
+ |      --------
+ |      >>> np.single(-2.0).is_integer()
+ |      True
+ |      >>> np.single(3.2).is_integer()
+ |      False
+ |
+ |  ----------------------------------------------------------------------
+ |  Class methods defined here:
+ |
+ |  __class_getitem__(...) from builtins.type
+ |      __class_getitem__(item, /)
+ |
+ |      Return a parametrized wrapper around the `~numpy.number` type.
+ |
+ |      .. versionadded:: 1.22
+ |
+ |      Returns
+ |      -------
+ |      alias : types.GenericAlias
+ |          A parametrized `~numpy.number` type.
+ |
+ |      Examples
+ |      --------
+ |      >>> from typing import Any
+ |      >>> import numpy as np
+ |
+ |      >>> np.signedinteger[Any]
+ |      numpy.signedinteger[typing.Any]
+ |
+ |      See Also
+ |      --------
+ |      :pep:`585` : Type hinting generics in standard collections.
+ |
+ |  ----------------------------------------------------------------------
+ |  Static methods defined here:
+ |
+ |  __new__(*args, **kwargs) from builtins.type
+ |      Create and return a new object.  See help(type) for accurate signature.
+ |
+ |  ----------------------------------------------------------------------
+ |  Methods inherited from floating:
+ |
+ |  __round__(...)
+ |
+ |  ----------------------------------------------------------------------
+ |  Methods inherited from generic:
+ |
+ |  __and__(self, value, /)
+ |      Return self&value.
+ |
+ |  __array__(...)
+ |      sc.__array__(dtype) return 0-dim array from scalar with specified dtype
+ |
+ |  __array_wrap__(...)
+ |      sc.__array_wrap__(obj) return scalar from array
+ |
+ |  __copy__(...)
+ |
+ |  __deepcopy__(...)
+ |
+ |  __format__(...)
+ |      NumPy array scalar formatter
+ |
+ |  __getitem__(self, key, /)
+ |      Return self[key].
+ |
+ |  __invert__(self, /)
+ |      ~self
+ |
+ |  __lshift__(self, value, /)
+ |      Return self<<value.
+ |
+ |  __or__(self, value, /)
+ |      Return self|value.
+ |
+ |  __rand__(self, value, /)
+ |      Return value&self.
+ |
+ |  __reduce__(...)
+ |      Helper for pickle.
+ |
+ |  __rlshift__(self, value, /)
+ |      Return value<<self.
+ |
+ |  __ror__(self, value, /)
+ |      Return value|self.
+ |
+ |  __rrshift__(self, value, /)
+ |      Return value>>self.
+ |
+ |  __rshift__(self, value, /)
+ |      Return self>>value.
+ |
+ |  __rxor__(self, value, /)
+ |      Return value^self.
+ |
+ |  __setstate__(...)
+ |
+ |  __sizeof__(...)
+ |      Size of object in memory, in bytes.
+ |
+ |  __xor__(self, value, /)
+ |      Return self^value.
+ |
+ |  all(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.all`.
+ |
+ |  any(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.any`.
+ |
+ |  argmax(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.argmax`.
+ |
+ |  argmin(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.argmin`.
+ |
+ |  argsort(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.argsort`.
+ |
+ |  astype(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.astype`.
+ |
+ |  byteswap(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.byteswap`.
+ |
+ |  choose(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.choose`.
+ |
+ |  clip(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.clip`.
+ |
+ |  compress(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.compress`.
+ |
+ |  conj(...)
+ |
+ |  conjugate(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.conjugate`.
+ |
+ |  copy(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.copy`.
+ |
+ |  cumprod(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.cumprod`.
+ |
+ |  cumsum(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.cumsum`.
+ |
+ |  diagonal(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.diagonal`.
+ |
+ |  dump(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.dump`.
+ |
+ |  dumps(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.dumps`.
+ |
+ |  fill(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.fill`.
+ |
+ |  flatten(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.flatten`.
+ |
+ |  getfield(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.getfield`.
+ |
+ |  item(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.item`.
+ |
+ |  itemset(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.itemset`.
+ |
+ |  max(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.max`.
+ |
+ |  mean(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.mean`.
+ |
+ |  min(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.min`.
+ |
+ |  newbyteorder(...)
+ |      newbyteorder(new_order='S', /)
+ |
+ |      Return a new `dtype` with a different byte order.
+ |
+ |      Changes are also made in all fields and sub-arrays of the data type.
+ |
+ |      The `new_order` code can be any from the following:
+ |
+ |      * 'S' - swap dtype from current to opposite endian
+ |      * {'<', 'little'} - little endian
+ |      * {'>', 'big'} - big endian
+ |      * {'=', 'native'} - native order
+ |      * {'|', 'I'} - ignore (no change to byte order)
+ |
+ |      Parameters
+ |      ----------
+ |      new_order : str, optional
+ |          Byte order to force; a value from the byte order specifications
+ |          above.  The default value ('S') results in swapping the current
+ |          byte order.
+ |
+ |
+ |      Returns
+ |      -------
+ |      new_dtype : dtype
+ |          New `dtype` object with the given change to the byte order.
+ |
+ |  nonzero(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.nonzero`.
+ |
+ |  prod(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.prod`.
+ |
+ |  ptp(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.ptp`.
+ |
+ |  put(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.put`.
+ |
+ |  ravel(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.ravel`.
+ |
+ |  repeat(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.repeat`.
+ |
+ |  reshape(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.reshape`.
+ |
+ |  resize(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.resize`.
+ |
+ |  round(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.round`.
+ |
+ |  searchsorted(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.searchsorted`.
+ |
+ |  setfield(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.setfield`.
+ |
+ |  setflags(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.setflags`.
+ |
+ |  sort(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.sort`.
+ |
+ |  squeeze(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.squeeze`.
+ |
+ |  std(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.std`.
+ |
+ |  sum(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.sum`.
+ |
+ |  swapaxes(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.swapaxes`.
+ |
+ |  take(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.take`.
+ |
+ |  tobytes(...)
+ |
+ |  tofile(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.tofile`.
+ |
+ |  tolist(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.tolist`.
+ |
+ |  tostring(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.tostring`.
+ |
+ |  trace(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.trace`.
+ |
+ |  transpose(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.transpose`.
+ |
+ |  var(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.var`.
+ |
+ |  view(...)
+ |      Scalar method identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.view`.
+ |
+ |  ----------------------------------------------------------------------
+ |  Data descriptors inherited from generic:
+ |
+ |  T
+ |      Scalar attribute identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.T`.
+ |
+ |  __array_interface__
+ |      Array protocol: Python side
+ |
+ |  __array_priority__
+ |      Array priority.
+ |
+ |  __array_struct__
+ |      Array protocol: struct
+ |
+ |  base
+ |      Scalar attribute identical to the corresponding array attribute.
+ |
+ |      Please see `ndarray.base`.
+ |
+ |  data
+ |      Pointer to start of data.
+ |
+ |  dtype
+ |      Get array data-descriptor.
+ |
+ |  flags
+ |      The integer value of flags.
+ |
+ |  flat
+ |      A 1-D view of the scalar.
+ |
+ |  imag
+ |      The imaginary part of the scalar.
+ |
+ |  itemsize
+ |      The length of one element in bytes.
+ |
+ |  nbytes
+ |      The length of the scalar in bytes.
+ |
+ |  ndim
+ |      The number of array dimensions.
+ |
+ |  real
+ |      The real part of the scalar.
+ |
+ |  shape
+ |      Tuple of array dimensions.
+ |
+ |  size
+ |      The number of elements in the gentype.
+ |
+ |  strides
+ |      Tuple of bytes steps in each dimension.
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+size(a, axis=None)
+    Return the number of elements along a given axis.
+
+    Parameters
+    ----------
+    a : array_like
+        Input data.
+    axis : int, optional
+        Axis along which the elements are counted.  By default, give
+        the total number of elements.
+
+    Returns
+    -------
+    element_count : int
+        Number of elements along the specified axis.
+
+    See Also
+    --------
+    shape : dimensions of array
+    ndarray.shape : dimensions of array
+    ndarray.size : number of elements in array
+
+    Examples
+    --------
+    >>> a = np.array([[1,2,3],[4,5,6]])
+    >>> np.size(a)
+    6
+    >>> np.size(a,1)
+    3
+    >>> np.size(a,0)
+    2
+
+None
+Help on function source in module numpy:
+
+source(object, output=<_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>)
+    Print or write to a file the source code for a NumPy object.
+
+    The source code is only returned for objects written in Python. Many
+    functions and classes are defined in C and will therefore not return
+    useful information.
+
+    Parameters
+    ----------
+    object : numpy object
+        Input object. This can be any object (function, class, module,
+        ...).
+    output : file object, optional
+        If `output` not supplied then source code is printed to screen
+        (sys.stdout).  File object must be created with either write 'w' or
+        append 'a' modes.
+
+    See Also
+    --------
+    lookfor, info
+
+    Examples
+    --------
+    >>> np.source(np.interp)                        #doctest: +SKIP
+    In file: /usr/lib/python2.6/dist-packages/numpy/lib/function_base.py
+    def interp(x, xp, fp, left=None, right=None):
+        """.... (full docstring printed)"""
+        if isinstance(x, (float, int, number)):
+            return compiled_interp([x], xp, fp, left, right).item()
+        else:
+            return compiled_interp(x, xp, fp, left, right)
+
+    The source code is only returned for objects written in Python.
+
+    >>> np.source(np.array)                         #doctest: +SKIP
+    Not available for this object.
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+split(ary, indices_or_sections, axis=0)
+    Split an array into multiple sub-arrays as views into `ary`.
+
+    Parameters
+    ----------
+    ary : ndarray
+        Array to be divided into sub-arrays.
+    indices_or_sections : int or 1-D array
+        If `indices_or_sections` is an integer, N, the array will be divided
+        into N equal arrays along `axis`.  If such a split is not possible,
+        an error is raised.
+
+        If `indices_or_sections` is a 1-D array of sorted integers, the entries
+        indicate where along `axis` the array is split.  For example,
+        ``[2, 3]`` would, for ``axis=0``, result in
+
+          - ary[:2]
+          - ary[2:3]
+          - ary[3:]
+
+        If an index exceeds the dimension of the array along `axis`,
+        an empty sub-array is returned correspondingly.
+    axis : int, optional
+        The axis along which to split, default is 0.
+
+    Returns
+    -------
+    sub-arrays : list of ndarrays
+        A list of sub-arrays as views into `ary`.
+
+    Raises
+    ------
+    ValueError
+        If `indices_or_sections` is given as an integer, but
+        a split does not result in equal division.
+
+    See Also
+    --------
+    array_split : Split an array into multiple sub-arrays of equal or
+                  near-equal size.  Does not raise an exception if
+                  an equal division cannot be made.
+    hsplit : Split array into multiple sub-arrays horizontally (column-wise).
+    vsplit : Split array into multiple sub-arrays vertically (row wise).
+    dsplit : Split array into multiple sub-arrays along the 3rd axis (depth).
+    concatenate : Join a sequence of arrays along an existing axis.
+    stack : Join a sequence of arrays along a new axis.
+    hstack : Stack arrays in sequence horizontally (column wise).
+    vstack : Stack arrays in sequence vertically (row wise).
+    dstack : Stack arrays in sequence depth wise (along third dimension).
+
+    Examples
+    --------
+    >>> x = np.arange(9.0)
+    >>> np.split(x, 3)
+    [array([0.,  1.,  2.]), array([3.,  4.,  5.]), array([6.,  7.,  8.])]
+
+    >>> x = np.arange(8.0)
+    >>> np.split(x, [3, 5, 6, 10])
+    [array([0.,  1.,  2.]),
+     array([3.,  4.]),
+     array([5.]),
+     array([6.,  7.]),
+     array([], dtype=float64)]
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+take(a, indices, axis=None, out=None, mode='raise')
+    Take elements from an array along an axis.
+
+    When axis is not None, this function does the same thing as "fancy"
+    indexing (indexing arrays using arrays); however, it can be easier to use
+    if you need elements along a given axis. A call such as
+    ``np.take(arr, indices, axis=3)`` is equivalent to
+    ``arr[:,:,:,indices,...]``.
+
+    Explained without fancy indexing, this is equivalent to the following use
+    of `ndindex`, which sets each of ``ii``, ``jj``, and ``kk`` to a tuple of
+    indices::
+
+        Ni, Nk = a.shape[:axis], a.shape[axis+1:]
+        Nj = indices.shape
+        for ii in ndindex(Ni):
+            for jj in ndindex(Nj):
+                for kk in ndindex(Nk):
+                    out[ii + jj + kk] = a[ii + (indices[jj],) + kk]
+
+    Parameters
+    ----------
+    a : array_like (Ni..., M, Nk...)
+        The source array.
+    indices : array_like (Nj...)
+        The indices of the values to extract.
+
+        .. versionadded:: 1.8.0
+
+        Also allow scalars for indices.
+    axis : int, optional
+        The axis over which to select values. By default, the flattened
+        input array is used.
+    out : ndarray, optional (Ni..., Nj..., Nk...)
+        If provided, the result will be placed in this array. It should
+        be of the appropriate shape and dtype. Note that `out` is always
+        buffered if `mode='raise'`; use other modes for better performance.
+    mode : {'raise', 'wrap', 'clip'}, optional
+        Specifies how out-of-bounds indices will behave.
+
+        * 'raise' -- raise an error (default)
+        * 'wrap' -- wrap around
+        * 'clip' -- clip to the range
+
+        'clip' mode means that all indices that are too large are replaced
+        by the index that addresses the last element along that axis. Note
+        that this disables indexing with negative numbers.
+
+    Returns
+    -------
+    out : ndarray (Ni..., Nj..., Nk...)
+        The returned array has the same type as `a`.
+
+    See Also
+    --------
+    compress : Take elements using a boolean mask
+    ndarray.take : equivalent method
+    take_along_axis : Take elements by matching the array and the index arrays
+
+    Notes
+    -----
+
+    By eliminating the inner loop in the description above, and using `s_` to
+    build simple slice objects, `take` can be expressed  in terms of applying
+    fancy indexing to each 1-d slice::
+
+        Ni, Nk = a.shape[:axis], a.shape[axis+1:]
+        for ii in ndindex(Ni):
+            for kk in ndindex(Nj):
+                out[ii + s_[...,] + kk] = a[ii + s_[:,] + kk][indices]
+
+    For this reason, it is equivalent to (but faster than) the following use
+    of `apply_along_axis`::
+
+        out = np.apply_along_axis(lambda a_1d: a_1d[indices], axis, a)
+
+    Examples
+    --------
+    >>> a = [4, 3, 5, 7, 6, 8]
+    >>> indices = [0, 1, 4]
+    >>> np.take(a, indices)
+    array([4, 3, 6])
+
+    In this example if `a` is an ndarray, "fancy" indexing can be used.
+
+    >>> a = np.array(a)
+    >>> a[indices]
+    array([4, 3, 6])
+
+    If `indices` is not one dimensional, the output also has these dimensions.
+
+    >>> np.take(a, [[0, 1], [2, 3]])
+    array([[4, 3],
+           [5, 7]])
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+tensordot(a, b, axes=2)
+    Compute tensor dot product along specified axes.
+
+    Given two tensors, `a` and `b`, and an array_like object containing
+    two array_like objects, ``(a_axes, b_axes)``, sum the products of
+    `a`'s and `b`'s elements (components) over the axes specified by
+    ``a_axes`` and ``b_axes``. The third argument can be a single non-negative
+    integer_like scalar, ``N``; if it is such, then the last ``N`` dimensions
+    of `a` and the first ``N`` dimensions of `b` are summed over.
+
+    Parameters
+    ----------
+    a, b : array_like
+        Tensors to "dot".
+
+    axes : int or (2,) array_like
+        * integer_like
+          If an int N, sum over the last N axes of `a` and the first N axes
+          of `b` in order. The sizes of the corresponding axes must match.
+        * (2,) array_like
+          Or, a list of axes to be summed over, first sequence applying to `a`,
+          second to `b`. Both elements array_like must be of the same length.
+
+    Returns
+    -------
+    output : ndarray
+        The tensor dot product of the input.
+
+    See Also
+    --------
+    dot, einsum
+
+    Notes
+    -----
+    Three common use cases are:
+        * ``axes = 0`` : tensor product :math:`a\otimes b`
+        * ``axes = 1`` : tensor dot product :math:`a\cdot b`
+        * ``axes = 2`` : (default) tensor double contraction :math:`a:b`
+
+    When `axes` is integer_like, the sequence for evaluation will be: first
+    the -Nth axis in `a` and 0th axis in `b`, and the -1th axis in `a` and
+    Nth axis in `b` last.
+
+    When there is more than one axis to sum over - and they are not the last
+    (first) axes of `a` (`b`) - the argument `axes` should consist of
+    two sequences of the same length, with the first axis to sum over given
+    first in both sequences, the second axis second, and so forth.
+
+    The shape of the result consists of the non-contracted axes of the
+    first tensor, followed by the non-contracted axes of the second.
+
+    Examples
+    --------
+    A "traditional" example:
+
+    >>> a = np.arange(60.).reshape(3,4,5)
+    >>> b = np.arange(24.).reshape(4,3,2)
+    >>> c = np.tensordot(a,b, axes=([1,0],[0,1]))
+    >>> c.shape
+    (5, 2)
+    >>> c
+    array([[4400., 4730.],
+           [4532., 4874.],
+           [4664., 5018.],
+           [4796., 5162.],
+           [4928., 5306.]])
+    >>> # A slower but equivalent way of computing the same...
+    >>> d = np.zeros((5,2))
+    >>> for i in range(5):
+    ...   for j in range(2):
+    ...     for k in range(3):
+    ...       for n in range(4):
+    ...         d[i,j] += a[k,n,i] * b[n,k,j]
+    >>> c == d
+    array([[ True,  True],
+           [ True,  True],
+           [ True,  True],
+           [ True,  True],
+           [ True,  True]])
+
+    An extended example taking advantage of the overloading of + and \*:
+
+    >>> a = np.array(range(1, 9))
+    >>> a.shape = (2, 2, 2)
+    >>> A = np.array(('a', 'b', 'c', 'd'), dtype=object)
+    >>> A.shape = (2, 2)
+    >>> a; A
+    array([[[1, 2],
+            [3, 4]],
+           [[5, 6],
+            [7, 8]]])
+    array([['a', 'b'],
+           ['c', 'd']], dtype=object)
+
+    >>> np.tensordot(a, A) # third argument default is 2 for double-contraction
+    array(['abbcccdddd', 'aaaaabbbbbbcccccccdddddddd'], dtype=object)
+
+    >>> np.tensordot(a, A, 1)
+    array([[['acc', 'bdd'],
+            ['aaacccc', 'bbbdddd']],
+           [['aaaaacccccc', 'bbbbbdddddd'],
+            ['aaaaaaacccccccc', 'bbbbbbbdddddddd']]], dtype=object)
+
+    >>> np.tensordot(a, A, 0) # tensor product (result too long to incl.)
+    array([[[[['a', 'b'],
+              ['c', 'd']],
+              ...
+
+    >>> np.tensordot(a, A, (0, 1))
+    array([[['abbbbb', 'cddddd'],
+            ['aabbbbbb', 'ccdddddd']],
+           [['aaabbbbbbb', 'cccddddddd'],
+            ['aaaabbbbbbbb', 'ccccdddddddd']]], dtype=object)
+
+    >>> np.tensordot(a, A, (2, 1))
+    array([[['abb', 'cdd'],
+            ['aaabbbb', 'cccdddd']],
+           [['aaaaabbbbbb', 'cccccdddddd'],
+            ['aaaaaaabbbbbbbb', 'cccccccdddddddd']]], dtype=object)
+
+    >>> np.tensordot(a, A, ((0, 1), (0, 1)))
+    array(['abbbcccccddddddd', 'aabbbbccccccdddddddd'], dtype=object)
+
+    >>> np.tensordot(a, A, ((2, 1), (1, 0)))
+    array(['acccbbdddd', 'aaaaacccccccbbbbbbdddddddd'], dtype=object)
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+transpose(a, axes=None)
+    Returns an array with axes transposed.
+
+    For a 1-D array, this returns an unchanged view of the original array, as a
+    transposed vector is simply the same vector.
+    To convert a 1-D array into a 2-D column vector, an additional dimension
+    must be added, e.g., ``np.atleast2d(a).T`` achieves this, as does
+    ``a[:, np.newaxis]``.
+    For a 2-D array, this is the standard matrix transpose.
+    For an n-D array, if axes are given, their order indicates how the
+    axes are permuted (see Examples). If axes are not provided, then
+    ``transpose(a).shape == a.shape[::-1]``.
+
+    Parameters
+    ----------
+    a : array_like
+        Input array.
+    axes : tuple or list of ints, optional
+        If specified, it must be a tuple or list which contains a permutation
+        of [0,1,...,N-1] where N is the number of axes of `a`. The `i`'th axis
+        of the returned array will correspond to the axis numbered ``axes[i]``
+        of the input. If not specified, defaults to ``range(a.ndim)[::-1]``,
+        which reverses the order of the axes.
+
+    Returns
+    -------
+    p : ndarray
+        `a` with its axes permuted. A view is returned whenever possible.
+
+    See Also
+    --------
+    ndarray.transpose : Equivalent method.
+    moveaxis : Move axes of an array to new positions.
+    argsort : Return the indices that would sort an array.
+
+    Notes
+    -----
+    Use ``transpose(a, argsort(axes))`` to invert the transposition of tensors
+    when using the `axes` keyword argument.
+
+    Examples
+    --------
+    >>> a = np.array([[1, 2], [3, 4]])
+    >>> a
+    array([[1, 2],
+           [3, 4]])
+    >>> np.transpose(a)
+    array([[1, 3],
+           [2, 4]])
+
+    >>> a = np.array([1, 2, 3, 4])
+    >>> a
+    array([1, 2, 3, 4])
+    >>> np.transpose(a)
+    array([1, 2, 3, 4])
+
+    >>> a = np.ones((1, 2, 3))
+    >>> np.transpose(a, (1, 0, 2)).shape
+    (2, 1, 3)
+
+    >>> a = np.ones((2, 3, 4, 5))
+    >>> np.transpose(a).shape
+    (5, 4, 3, 2)
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+vdot(...)
+    vdot(a, b, /)
+
+    Return the dot product of two vectors.
+
+    The vdot(`a`, `b`) function handles complex numbers differently than
+    dot(`a`, `b`).  If the first argument is complex the complex conjugate
+    of the first argument is used for the calculation of the dot product.
+
+    Note that `vdot` handles multidimensional arrays differently than `dot`:
+    it does *not* perform a matrix product, but flattens input arguments
+    to 1-D vectors first. Consequently, it should only be used for vectors.
+
+    Parameters
+    ----------
+    a : array_like
+        If `a` is complex the complex conjugate is taken before calculation
+        of the dot product.
+    b : array_like
+        Second argument to the dot product.
+
+    Returns
+    -------
+    output : ndarray
+        Dot product of `a` and `b`.  Can be an int, float, or
+        complex depending on the types of `a` and `b`.
+
+    See Also
+    --------
+    dot : Return the dot product without using the complex conjugate of the
+          first argument.
+
+    Examples
+    --------
+    >>> a = np.array([1+2j,3+4j])
+    >>> b = np.array([5+6j,7+8j])
+    >>> np.vdot(a, b)
+    (70-8j)
+    >>> np.vdot(b, a)
+    (70+8j)
+
+    Note that higher-dimensional arrays are flattened!
+
+    >>> a = np.array([[1, 4], [5, 6]])
+    >>> b = np.array([[4, 1], [2, 2]])
+    >>> np.vdot(a, b)
+    30
+    >>> np.vdot(b, a)
+    30
+    >>> 1*4 + 4*1 + 5*2 + 6*2
+    30
+
+None
+Help on _ArrayFunctionDispatcher in module numpy:
+
+where(...)
+    where(condition, [x, y], /)
+
+    Return elements chosen from `x` or `y` depending on `condition`.
+
+    .. note::
+        When only `condition` is provided, this function is a shorthand for
+        ``np.asarray(condition).nonzero()``. Using `nonzero` directly should be
+        preferred, as it behaves correctly for subclasses. The rest of this
+        documentation covers only the case where all three arguments are
+        provided.
+
+    Parameters
+    ----------
+    condition : array_like, bool
+        Where True, yield `x`, otherwise yield `y`.
+    x, y : array_like
+        Values from which to choose. `x`, `y` and `condition` need to be
+        broadcastable to some shape.
+
+    Returns
+    -------
+    out : ndarray
+        An array with elements from `x` where `condition` is True, and elements
+        from `y` elsewhere.
+
+    See Also
+    --------
+    choose
+    nonzero : The function that is called when x and y are omitted
+
+    Notes
+    -----
+    If all the arrays are 1-D, `where` is equivalent to::
+
+        [xv if c else yv
+         for c, xv, yv in zip(condition, x, y)]
+
+    Examples
+    --------
+    >>> a = np.arange(10)
+    >>> a
+    array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    >>> np.where(a < 5, a, 10*a)
+    array([ 0,  1,  2,  3,  4, 50, 60, 70, 80, 90])
+
+    This can be used on multidimensional arrays too:
+
+    >>> np.where([[True, False], [True, True]],
+    ...          [[1, 2], [3, 4]],
+    ...          [[9, 8], [7, 6]])
+    array([[1, 8],
+           [3, 4]])
+
+    The shapes of x, y, and the condition are broadcast together:
+
+    >>> x, y = np.ogrid[:3, :4]
+    >>> np.where(x < y, x, 10 + y)  # both x and 10+y are broadcast
+    array([[10,  0,  0,  0],
+           [10, 11,  1,  1],
+           [10, 11, 12,  2]])
+
+    >>> a = np.array([[0, 1, 2],
+    ...               [0, 2, 4],
+    ...               [0, 3, 6]])
+    >>> np.where(a < 4, a, -1)  # -1 is broadcast
+    array([[ 0,  1,  2],
+           [ 0,  2, -1],
+           [ 0,  3, -1]])
+
+None
+Help on function who in module numpy.lib.utils:
+
+who(vardict=None)
+    Print the NumPy arrays in the given dictionary.
+
+    If there is no dictionary passed in or `vardict` is None then returns
+    NumPy arrays in the globals() dictionary (all NumPy arrays in the
+    namespace).
+
+    Parameters
+    ----------
+    vardict : dict, optional
+        A dictionary possibly containing ndarrays.  Default is globals().
+
+    Returns
+    -------
+    out : None
+        Returns 'None'.
+
+    Notes
+    -----
+    Prints out the name, shape, bytes and type of all of the ndarrays
+    present in `vardict`.
+
+    Examples
+    --------
+    >>> a = np.arange(10)
+    >>> b = np.ones(20)
+    >>> np.who()
+    Name            Shape            Bytes            Type
+    ===========================================================
+    a               10               80               int64
+    b               20               160              float64
+    Upper bound on total bytes  =       240
+
+    >>> d = {'x': np.arange(2.0), 'y': np.arange(3.0), 'txt': 'Some str',
+    ... 'idx':5}
+    >>> np.who(d)
+    Name            Shape            Bytes            Type
+    ===========================================================
+    x               2                16               float64
+    y               3                24               float64
+    Upper bound on total bytes  =       40
+
+None
