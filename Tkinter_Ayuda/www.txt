@@ -1,0 +1,7 @@
+https://programacionfacil.org/blog/iniciacion-a-los-modulos-y-tkinter-100-dias-de-python-8/
+
+https://www.tutorialspoint.com/python/tk_button.htm
+
+https://www.pythontutorial.net/tkinter/tkinter-button/
+
+
